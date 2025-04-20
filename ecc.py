@@ -1,0 +1,219 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed May  9 20:02:08 2018
+
+@author: raul
+
+Basic functions and algorithms for implementing Elliptic Curve Cryptography
+"""
+
+
+from modular_arithmetic import divide_mod
+
+# I don't think that this function belongs to here. I need to find a better
+# place to put it.
+# Computes the Jacobi symbol (a/n), assuming that 0 <= a < n and that n is odd
+
+
+def jacobi_symbol(a, n):
+    # The first terminating case. When a is equal to zero, the value of
+    # the Jacobi symbol is also zero.
+    if a == 0:
+        return 0
+    # The second terminating case. When a is equal to one, the value of
+    # the Jacobi symbol is also one.
+    elif a == 1:
+        return 1
+    # This part uses the law of quadratic reciprocity to compute the Jacobi
+    # symbol for a non-terminal case. We first look at the case
+    # where a is even.
+    elif a % 2 == 0:
+        # To implement this part, we use the second suplement of the law of
+        # quadratic reciprocity.
+        if n % 8 == 1 or n % 8 == 7:
+            return jacobi_symbol(a//2, n)
+        else:
+            return -jacobi_symbol(a//2, n)
+    # For this part we simply use the law of quadratic reciprocity to simplify
+    # the recursively call the jacobi_symbol function with smaller arguments.
+    elif a % 4 == 3 and n % 4 == 3:
+        return -jacobi_symbol(n % a, a)
+    else:
+        return jacobi_symbol(n % a, a)
+
+
+"""
+These are the basic functions for computing double and addition of
+point in an elliptic curve.
+"""
+
+
+# This function calculates the denominator needed to double a point in an
+# elliptic curve. If the denominator is 0, then we now that the resutl will be
+# the point at infinity.
+def e_denominator_of_double(P, E, q):
+    return (2*P[1]) % q
+
+
+# This function calculates the denominator needed to add two points in an
+# elliptic curve. If the denominator is 0, then we now that the resutl will be
+# the point at infinity.
+def e_denominator_of_sum(P, Q, E, q):
+    return (P[0]-Q[0]) % q
+
+
+# These functions provide the basic formulas for computing the sum of two
+# points in an elliptic curve.
+# This function defines the x-component of the sum of two points.
+def e_sum_x(P, Q, E, q):
+    return (pow(divide_mod((Q[1]-P[1], q), (Q[0]-P[0], q))[0], 2, q) -
+            P[0]-P[1]) % q
+
+
+# This function defines the y-component of the sum of two points.
+def e_sum_y(P, Q, E, q):
+    return ((divide_mod((Q[1]-P[1], q),
+            (Q[0]-P[0], q))[0])*(P[0]-e_sum_x(P, Q, E, q))-Q[1]) % q
+
+
+# This function defines the x-component of the double of a point.
+def e_double_x(P, E, q):
+    return (pow(divide_mod((3*pow(P[0], 2, q)+E[0], q),
+                (2*P[1], q))[0], 2, q)-2 * P[0]) % q
+
+
+# This function defines the y-component of the double of a point.
+def e_double_y(P, E, q):
+    return (divide_mod((3*pow(P[0], 2, q)+E[0], q),
+                       (2*P[1], q))[0]*(P[0] - e_double_x(P, E, q))-P[1]) % q
+
+"""
+These functions calculate the basic invariants associated to an Elliptic
+curve
+"""
+
+
+# This function calculates the discriminant of an elliptic curve.
+def discriminant(E):
+    return -16*(4*(E[0]**3) + 27*(E[1]**2))
+
+
+# This function calculates the j-invariant of an elliptic curve.
+def j_invariant(E):
+    return ((-48*E[0])**3)/discriminant(E)
+
+
+"""
+These functions implement the basic addition and doubling operators in an
+elliptic curve
+"""
+
+
+# This function implements the operation of taking the inverse of a point in
+# the elliptic curve.
+# The value of P=(x,y) represents the point in the elliptic curve for which we
+# want to compute the inverse.
+# The value of q represents the order of the base field over which we are
+# considering the points.
+def elliptic_inverse(P, q):
+    # We first consider the special case in which P is the point at infinity.
+    if P == "infty":
+        return "infty"
+    # Here we consider the general case.
+    else:
+        return(P[0], -P[1] % 1)
+
+
+# This function implements the operation of doubling a point in an elliptic
+# curve.
+# The value of P=(x,y) represents the point in the elliptic curve for which
+# we want to compute the inverse.
+# The value of E represents the parameters (a,b) that define the elliptic
+# curve.
+# The value of q represents the order of the base field over which we are
+# considering the points.
+def elliptic_double(P, E, q):
+    # We first consider the special case in which P is the point at infinity.
+    if P == "infty":
+        return "infty"
+    # Now we consider the case in which P is its own inverse, and hence
+    # doubling it gives us the point at infinity.
+    elif e_denominator_of_double(P, E, q) == 0:
+        return "infty"
+    # Here we consider the generic case.
+    else:
+        return(e_double_x(P, E, q), e_double_y(P, E, q))
+
+
+# This function implements the operation of adding two points in an elliptic
+# curve.
+# This function implements the operation of doubling a point in an elliptic
+# curve.
+# The value of P=(x,y) represents the point in the elliptic curve for which
+# we want to compute the inverse.
+# The value of E represents the parameters (a,b) that define the elliptic
+# curve.
+# The value of q represents the order of the base field over which we are
+# considering the points.
+def elliptic_addition(P, Q, E, q):
+    # We first consider the special case in which P is the point at infinity.
+    if P == "infty":
+        return Q
+    # We then consider the special case in which Q is the point at infinity.
+    elif Q == "infty":
+        return P
+    # Now we consider the case in which the two points are equal. In this case
+    # we call the doubling function to compute the result.
+    elif P == Q:
+        return elliptic_double(P, E, q)
+    # If the denominator is 0, then we obtain the point at infinity.
+    elif e_denominator_of_sum(P, Q, E, q) == 0:
+        return "infty"
+    # Here we consider the generic case.
+    else:
+        return (e_sum_x(P, Q, E, q), e_sum_y(P, Q, E, q))
+
+
+# This function implements the operation of multiplying a point on the elliptic
+# curve by a given integer.
+# This function implements the operation of doubling a point in an elliptic
+# curve.
+# The value of P=(x,y) represents the point in the elliptic curve for which we
+# want to compute the inverse.
+# The value of E represents the parameters (a,b) that define the elliptic
+# curve.
+# The value of q represents the order of the base field over which we are
+# considering the points.
+def elliptic_multiplication(m, P, E, q):
+    # First we consider the case in which P is the point at infinity or m is
+    # equal to 0 (mod q) in which case we obtain the point at infinity as a
+    # result.
+    if m % q == 0 or P == "infty":
+        return "infty"
+    # If m is negative, then we call the function again replacing m by -m and P
+    # by its inverse.
+    elif m < 0:
+        return elliptic_multiplication(-m, elliptic_inverse(P, q))
+    # If m is even, then we call the function again replacing m by m/2 and we
+    # double the result.
+    elif m % 2 == 0:
+        return elliptic_double(elliptic_multiplication(m//2, P, E, q), E, q)
+    # If m is odd, then we call the function again replacing m by m-1 and then
+    # add the point P to the result obtained.
+    else:
+        return elliptic_addition(P, elliptic_multiplication(m-1, P, E, q),
+                                 E, q)
+
+
+# This function computes the collection of points belonging to a given elliptic
+# curve.
+# Note: For larger values of q, this operation is very intensive in terms of
+# time and storage space.
+def points_of_elliptic_curve(E, q):
+    E_q = ["infty"]
+    for x in list(range(q)):
+        if jacobi_symbol((pow(x, 3, q)+E[0]*x+E[1]) % q, q) == 1:
+            for y in list(range(q)):
+                if pow(y, 2, q) == (pow(x, 3, q)+E[0]*x+E[1]) % q:
+                    E_q.append((x, y))
+    return E_q

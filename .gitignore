@@ -1,0 +1,21 @@
+# Ignore Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore virtual environment
+venv/
+.env
+
+# Ignore build and distribution files
+build/
+dist/
+*.egg-info/
+
+# Ignore IDE/editor files
+.vscode/
+.idea/
+*.swp  # Vim swap files
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/

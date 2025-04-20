@@ -1,0 +1,20 @@
+# pyproject.toml
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "MA2006B"
+version = "0.1.0"
+description = "Paquete de apoyo para el curso MA2006B Uso de álgebras modernas para seguridad y criptografía"
+authors = [
+  { name = "Raul Gomez", email = "rgomez@tec.mx" }
+]
+dependencies = [
+  "numpy",
+  "matplotlib",
+  "scipy",
+  "ipython",
+]
+
+[project.scripts]

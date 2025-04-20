@@ -8,7 +8,8 @@ Basic functions and algorithms for implementing Elliptic Curve Cryptography
 """
 
 
-from modular_arithmetic import divide_mod
+from cryptocalc.modular_arithmetic import divide_mod
+
 
 # I don't think that this function belongs to here. I need to find a better
 # place to put it.
@@ -87,6 +88,7 @@ def e_double_y(P, E, q):
     return (divide_mod((3*pow(P[0], 2, q)+E[0], q),
                        (2*P[1], q))[0]*(P[0] - e_double_x(P, E, q))-P[1]) % q
 
+
 """
 These functions calculate the basic invariants associated to an Elliptic
 curve
@@ -121,7 +123,7 @@ def elliptic_inverse(P, q):
         return "infty"
     # Here we consider the general case.
     else:
-        return(P[0], -P[1] % 1)
+        return (P[0], -P[1] % 1)
 
 
 # This function implements the operation of doubling a point in an elliptic
@@ -142,7 +144,7 @@ def elliptic_double(P, E, q):
         return "infty"
     # Here we consider the generic case.
     else:
-        return(e_double_x(P, E, q), e_double_y(P, E, q))
+        return (e_double_x(P, E, q), e_double_y(P, E, q))
 
 
 # This function implements the operation of adding two points in an elliptic

@@ -6,7 +6,7 @@ Basic functions and algorithms for implementing Elliptic Curve Cryptography
 """
 
 
-from ecc import (elliptic_multiplication, points_of_elliptic_curve)
+from cryptocalc.ecc import (elliptic_multiplication, points_of_elliptic_curve)
 
 
 # We set our elliptic curve with parameters a=0 and b=1, that is, our elliptic

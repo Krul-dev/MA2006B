@@ -1,12 +1,12 @@
-
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 """
-Created on Fri Apr  6 14:59:45 2018
-
-@author: raul
+Author: Raul Gomez
+Date: 2018-04-6
+Description: 
 """
 
-from euclid_algorithm import extended_gcd
+from cryptocalc.euclid_algorithm import extended_gcd
 
 
 # This module implements modular arithmetic operations
@@ -18,7 +18,7 @@ def add_mod(x, y):
     return simplify_mod(x[0]+y[0], x[1])
 
 
-def substact_mod(x, y):
+def substract_mod(x, y):
     return simplify_mod(x[0]-y[0], x[1])
 
 
@@ -47,4 +47,3 @@ def chinese_remainder(x, y):
     n = p*q
     z = b*p*r + a*q*s
     return simplify_mod(z, n)
-

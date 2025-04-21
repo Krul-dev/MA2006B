@@ -30,11 +30,22 @@ def divide_mod(x, y):
     return simplify_mod(x[0]*(fast_extended_gcd(y[1], y[0])[1]), x[1])
 
 
-def exp_mod(x, m):
+def naive_exp_mod(x, m):
     if m == 0:
         return (1, x[1])
     else:
-        return multiply_mod(x, exp_mod(x, m-1))
+        return multiply_mod(x, naive_exp_mod(x, m-1))
+
+
+def exp_mod(x, m):
+    if m == 0:
+        return (1, x[1])
+    elif m == 1:
+        return x
+    elif m % 2 == 0:
+        return exp_mod(multiply_mod(x, x), m // 2)
+    else:
+        return multiply_mod(x, exp_mod(multiply_mod(x, x), (m - 1) // 2))
 
 
 def chinese_remainder(x, y):

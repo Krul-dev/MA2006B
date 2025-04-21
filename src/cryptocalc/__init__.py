@@ -29,6 +29,11 @@ from cryptocalc.ecc import (
     points_of_elliptic_curve,
 )
 
+from cryptocalc.diffie–hellman import (
+    diffie_hellman_public_key_generator,
+    diffie_hellman_shared_key_generator,
+)
+
 
 # Define public API
 __all__ = [
@@ -48,4 +53,6 @@ __all__ = [
     "elliptic_addition",
     "elliptic_multiplication",
     "points_of_elliptic_curve",
+    "diffie_hellman_public_key_generator",
+    "diffie_hellman_shared_key_generator",
 ]

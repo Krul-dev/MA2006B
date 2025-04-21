@@ -9,6 +9,7 @@ Created on Tue May 15 07:45:58 2018
 from cryptocalc.euclid_algorithm import gcd, fast_extended_gcd
 from cryptocalc.encoding import encode, decode
 from random import randint
+
 from Crypto.Util import number
 
 

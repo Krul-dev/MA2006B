@@ -15,7 +15,9 @@ dependencies = [
   "matplotlib",
   "scipy",
   "ipython",
-  "Crypto",
+  "pycryptodome",
 ]
 
 [project.scripts]
+ecc_test = "cryptocalc.ecc_test:main"
+rsa_cryptography_test = "cryptocalc.rsa_cryptography_test:main"

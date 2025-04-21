@@ -18,7 +18,7 @@ def add_mod(x, y):
     return simplify_mod(x[0]+y[0], x[1])
 
 
-def substact_mod(x, y):
+def substract_mod(x, y):
     return simplify_mod(x[0]-y[0], x[1])
 
 

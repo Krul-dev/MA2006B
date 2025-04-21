@@ -11,25 +11,22 @@ from cryptocalc.ecc import (elliptic_multiplication, points_of_elliptic_curve)
 
 # We set our elliptic curve with parameters a=0 and b=1, that is, our elliptic
 # curve corresponds to the equation y^2 = x^3 +1.
-a = 0
-b = 1
+a = 6
+b = 23
 E = (a, b)
 
-
 # We set out base field to be F_101.
-q = 101
+q = 103
 
 
 # We compute all the points of the elliptic curve.
 # We should notice that in general this is not practical, but in this very
 # small example, it can be done.
 E_q = points_of_elliptic_curve(E, q)
-# We now show the corresponding list.
-E_q
 
 
 # As a base point, we choose the point P=(95,47)
-P = (95, 47)
+P = (95, 9)
 
 
 # We now create a list in which we store the passwords 20, 27 and 72

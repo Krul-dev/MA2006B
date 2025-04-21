@@ -15,6 +15,7 @@ dependencies = [
   "matplotlib",
   "scipy",
   "ipython",
+  "Crypto",
 ]
 
 [project.scripts]

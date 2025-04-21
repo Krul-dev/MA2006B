@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """
+ecc.py
 Created on Wed May  9 20:02:08 2018
 
 @author: raul
@@ -9,7 +10,6 @@ Basic functions and algorithms for implementing Elliptic Curve Cryptography
 
 
 from cryptocalc.modular_arithmetic import divide_mod
-
 
 # I don't think that this function belongs to here. I need to find a better
 # place to put it.
@@ -29,14 +29,14 @@ def jacobi_symbol(a, n):
     # symbol for a non-terminal case. We first look at the case
     # where a is even.
     elif a % 2 == 0:
-        # To implement this part, we use the second suplement of the law of
+        # To implement this part, we use the second supplement of the law of
         # quadratic reciprocity.
         if n % 8 == 1 or n % 8 == 7:
             return jacobi_symbol(a//2, n)
         else:
             return -jacobi_symbol(a//2, n)
     # For this part we simply use the law of quadratic reciprocity to simplify
-    # the recursively call the jacobi_symbol function with smaller arguments.
+    # the recursively call the Jacobi_symbol function with smaller arguments.
     elif a % 4 == 3 and n % 4 == 3:
         return -jacobi_symbol(n % a, a)
     else:
@@ -50,14 +50,14 @@ point in an elliptic curve.
 
 
 # This function calculates the denominator needed to double a point in an
-# elliptic curve. If the denominator is 0, then we now that the resutl will be
+# elliptic curve. If the denominator is 0, then we now that the result will be
 # the point at infinity.
 def e_denominator_of_double(P, E, q):
     return (2*P[1]) % q
 
 
 # This function calculates the denominator needed to add two points in an
-# elliptic curve. If the denominator is 0, then we now that the resutl will be
+# elliptic curve. If the denominator is 0, then we now that the result will be
 # the point at infinity.
 def e_denominator_of_sum(P, Q, E, q):
     return (P[0]-Q[0]) % q
@@ -65,28 +65,27 @@ def e_denominator_of_sum(P, Q, E, q):
 
 # These functions provide the basic formulas for computing the sum of two
 # points in an elliptic curve.
-# This function defines the x-component of the sum of two points.
-def e_sum_x(P, Q, E, q):
-    return (pow(divide_mod((Q[1]-P[1], q), (Q[0]-P[0], q))[0], 2, q) -
-            P[0]-P[1]) % q
+# This function defines the sum of two points.
+def e_sum(P, Q, E, q):
+    x_1 = P[0]
+    y_1 = P[1]
+    x_2 = Q[0]
+    y_2 = Q[1]
+    m = divide_mod(((y_2-y_1) % q, q), ((x_2-x_1) % q, q))[0]
+    x_3 = (m**2-x_1-x_2) % q
+    y_3 = (m*(x_1-x_3)-y_1) % q
+    return (x_3, y_3)
 
 
-# This function defines the y-component of the sum of two points.
-def e_sum_y(P, Q, E, q):
-    return ((divide_mod((Q[1]-P[1], q),
-            (Q[0]-P[0], q))[0])*(P[0]-e_sum_x(P, Q, E, q))-Q[1]) % q
-
-
-# This function defines the x-component of the double of a point.
-def e_double_x(P, E, q):
-    return (pow(divide_mod((3*pow(P[0], 2, q)+E[0], q),
-                (2*P[1], q))[0], 2, q)-2 * P[0]) % q
-
-
-# This function defines the y-component of the double of a point.
-def e_double_y(P, E, q):
-    return (divide_mod((3*pow(P[0], 2, q)+E[0], q),
-                       (2*P[1], q))[0]*(P[0] - e_double_x(P, E, q))-P[1]) % q
+# This function defines the double of a point.
+def e_double(P, E, q):
+    a = E[0]
+    x_1 = P[0]
+    y_1 = P[1]
+    m = divide_mod(((3*(x_1**2) + a) % q, q), ((2 * y_1) % q, q))[0]
+    x_3 = (m**2-2*x_1) % q
+    y_3 = (m*(x_1-x_3)-y_1) % q
+    return (x_3, y_3)
 
 
 """
@@ -144,7 +143,7 @@ def elliptic_double(P, E, q):
         return "infty"
     # Here we consider the generic case.
     else:
-        return (e_double_x(P, E, q), e_double_y(P, E, q))
+        return e_double(P, E, q)
 
 
 # This function implements the operation of adding two points in an elliptic
@@ -173,7 +172,7 @@ def elliptic_addition(P, Q, E, q):
         return "infty"
     # Here we consider the generic case.
     else:
-        return (e_sum_x(P, Q, E, q), e_sum_y(P, Q, E, q))
+        return e_sum(P, Q, E, q)
 
 
 # This function implements the operation of multiplying a point on the elliptic
@@ -214,7 +213,7 @@ def elliptic_multiplication(m, P, E, q):
 def points_of_elliptic_curve(E, q):
     E_q = ["infty"]
     for x in list(range(q)):
-        if jacobi_symbol((pow(x, 3, q)+E[0]*x+E[1]) % q, q) == 1:
+        if jacobi_symbol((pow(x, 3, q)+E[0]*x+E[1]) % q, q) != -1:
             for y in list(range(q)):
                 if pow(y, 2, q) == (pow(x, 3, q)+E[0]*x+E[1]) % q:
                     E_q.append((x, y))

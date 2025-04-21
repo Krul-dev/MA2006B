@@ -1,15 +1,15 @@
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 """
-Author: Raul Gomez
-Date: 2018-04-6
-Description: 
+modular_arithmetic.py
+
+Created on Fri Apr  6 14:59:45 2018
+
+@author: raul
 """
 
-from cryptocalc.euclid_algorithm import extended_gcd
+from cryptocalc.euclid_algorithm import fast_extended_gcd
 
 
-# This module implements modular arithmetic operations
 def simplify_mod(a, n):
     return (a % n, n)
 
@@ -18,7 +18,7 @@ def add_mod(x, y):
     return simplify_mod(x[0]+y[0], x[1])
 
 
-def substract_mod(x, y):
+def substact_mod(x, y):
     return simplify_mod(x[0]-y[0], x[1])
 
 
@@ -27,7 +27,7 @@ def multiply_mod(x, y):
 
 
 def divide_mod(x, y):
-    return simplify_mod(x[0]*(extended_gcd(y[0], y[1])[0]), x[1])
+    return simplify_mod(x[0]*(fast_extended_gcd(y[1], y[0])[1]), x[1])
 
 
 def exp_mod(x, m):
@@ -42,8 +42,8 @@ def chinese_remainder(x, y):
     p = x[1]
     b = y[0]
     q = y[1]
-    r = extended_gcd(p, q)[0]
-    s = extended_gcd(p, q)[1]
+    r = fast_extended_gcd(p, q)[0]
+    s = fast_extended_gcd(p, q)[1]
     n = p*q
     z = b*p*r + a*q*s
     return simplify_mod(z, n)

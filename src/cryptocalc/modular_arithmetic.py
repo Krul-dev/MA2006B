@@ -31,10 +31,10 @@ def divide_mod(x, y):
 
 
 def naive_exp_mod(x, m):
-    if m == 0:
-        return (1, x[1])
-    else:
-        return multiply_mod(x, naive_exp_mod(x, m-1))
+    result = 1
+    for i in range(m):
+        result = (result * x[0]) % x[1]
+    return (result, x[1])
 
 
 def exp_mod(x, m):

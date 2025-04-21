@@ -29,7 +29,7 @@ from cryptocalc.ecc import (
     points_of_elliptic_curve,
 )
 
-from cryptocalc.diffie–hellman import (
+from cryptocalc.diffie_hellman import (
     diffie_hellman_public_key_generator,
     diffie_hellman_shared_key_generator,
 )

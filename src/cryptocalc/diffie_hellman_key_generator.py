@@ -11,13 +11,14 @@ from Crypto.Util.number import bytes_to_long
 
 # Example safe prime (2048-bit)
 # In practice, use a standardized safe prime from RFC 3526 or another trusted source
-p = int(
+RFC_3526_SAFE_PRIME = int(
     "FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E08"
     "8A67CC74020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B"
     "302B0A6DF25F14374FE1356D6D51C245E485B576625E7EC6F44C42E9"
     "A63A36210000000000090563", 16
 )
-q = (p - 1) // 2  # Subgroup order (approximately 1024 bits for a 2048-bit prime)
+# Subgroup order (approximately 1024 bits for a 2048-bit prime)
+RFC_3526_SOPHIE_PRIME = (RFC_3526_SAFE_PRIME - 1) // 2
 
 # Generate private key 'a'
 
@@ -37,6 +38,7 @@ def generate_private_key(q):
 
 def main():
     # Generate private keys for Alice (a) and Bob (b)
+    q = RFC_3526_SOPHIE_PRIME
     a = generate_private_key(q)
     b = generate_private_key(q)
 

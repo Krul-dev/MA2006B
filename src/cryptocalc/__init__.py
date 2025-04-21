@@ -15,6 +15,7 @@ from cryptocalc.modular_arithmetic import (
     substract_mod,
     multiply_mod,
     divide_mod,
+    naive_exp_mod,
     exp_mod,
     chinese_remainder,
 )
@@ -34,6 +35,12 @@ from cryptocalc.diffie_hellman import (
     diffie_hellman_shared_key_generator,
 )
 
+from cryptocalc.diffie_hellman_key_generator import (
+    RFC_3526_SAFE_PRIME,
+    RFC_3526_SOPHIE_PRIME,
+    generate_private_key,
+)
+
 
 # Define public API
 __all__ = [
@@ -44,6 +51,7 @@ __all__ = [
     "substract_mod",
     "multiply_mod",
     "divide_mod",
+    "naive_exp_mod",
     "exp_mod",
     "chinese_remainder",
     "jacobi_symbol",
@@ -55,4 +63,7 @@ __all__ = [
     "points_of_elliptic_curve",
     "diffie_hellman_public_key_generator",
     "diffie_hellman_shared_key_generator",
+    "RFC_3526_SAFE_PRIME",
+    "RFC_3526_SOPHIE_PRIME",
+    "generate_private_key",
 ]

@@ -9,6 +9,7 @@ Description:
 from cryptocalc import exp_mod
 
 
+
 def diffie_hellman_public_key_generator(safe_prime, primitive_root, private_key):
     """
     Generate a public key using Diffie-Hellman key exchange.

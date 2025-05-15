@@ -29,7 +29,6 @@ def diffie_hellman_public_key_generator(safe_prime, primitive_root, private_key)
     # Return the first element of the tuple (the result of the exponentiation)
     return public_key[0]
 
-#Test comment for github
 def diffie_hellman_shared_key_generator(safe_prime, public_key, private_key):
     """
     Generate a shared key using Diffie-Hellman key exchange.

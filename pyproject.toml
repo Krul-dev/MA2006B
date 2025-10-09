@@ -17,7 +17,8 @@ dependencies = [
   "ipython",
   "cryptography",
   "ipykernel",
-  "jupyterlab"
+  "jupyterlab",
+  "pycryptodome"
 ]
 
 [project.scripts]

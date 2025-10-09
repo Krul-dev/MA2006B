@@ -41,6 +41,19 @@ from cryptocalc.diffie_hellman_key_generator import (
     generate_private_key,
 )
 
+from cryptocalc.rsa_cryptography import (
+    rsa_key_generation,
+    rsa_encryption,
+    rsa_decryption,
+    rsa_text_encryption,
+    rsa_text_decryption,
+)
+
+from cryptocalc.encoding import (
+    encode,
+    decode,
+)
+
 
 # Define public API
 __all__ = [
@@ -66,4 +79,11 @@ __all__ = [
     "RFC_3526_SAFE_PRIME",
     "RFC_3526_SOPHIE_PRIME",
     "generate_private_key",
+    "rsa_key_generation",
+    "rsa_encryption",
+    "rsa_decryption",
+    "rsa_text_encryption",
+    "rsa_text_decryption",
+    "encode",
+    "decode",
 ]

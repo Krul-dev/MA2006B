@@ -16,9 +16,15 @@ dependencies = [
   "scipy",
   "ipython",
   "cryptography",
+  "pycryptodome",
   "ipykernel",
   "jupyterlab",
-  "pycryptodome"
+  "pycryptodome",
+  "jupyter-console",
+  "jupyter_client",
+  "pyzmq",
+  "tornado",
+  "traitlets",
 ]
 
 [project.scripts]

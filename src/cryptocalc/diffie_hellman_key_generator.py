@@ -20,6 +20,15 @@ RFC_3526_SOPHIE_PRIME = (RFC_3526_SAFE_PRIME - 1) // 2
 
 
 def generate_private_key(q):
+    """Return a uniformly random private key in [2**256, q-1].
+
+    Args:
+        q (int): A Sophie Germain prime that defines the upper bound.
+
+    Raises:
+        ValueError: If `q` is smaller than 2**384, which does not leave
+            enough entropy for a secure private key.
+    """
     # Validate q is big enough
     if q < 2**384:
         raise ValueError("q must be at least 2^256")
@@ -34,6 +43,7 @@ def generate_private_key(q):
 
 
 def main():
+    """Generate two Diffie-Hellman private keys and print them."""
     q = RFC_3526_SOPHIE_PRIME
     a = generate_private_key(q)
     b = generate_private_key(q)

@@ -9,7 +9,6 @@ Description:
 from cryptocalc import exp_mod
 
 
-
 def diffie_hellman_public_key_generator(safe_prime, primitive_root, private_key):
     """
     Generate a public key using Diffie-Hellman key exchange.
@@ -28,6 +27,7 @@ def diffie_hellman_public_key_generator(safe_prime, primitive_root, private_key)
     public_key = exp_mod((g, p), a)
     # Return the first element of the tuple (the result of the exponentiation)
     return public_key[0]
+
 
 def diffie_hellman_shared_key_generator(safe_prime, public_key, private_key):
     """

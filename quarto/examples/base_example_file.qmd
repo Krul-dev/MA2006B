@@ -1,0 +1,11 @@
+---
+title: "Ejemplos" 
+author: "Raul Gomez"
+date: today
+format:
+   pdf:
+     fontsize: 11pt
+     pdf-engine: pdflatex
+---
+
+{{< include 1_least_squares_fitting.qmd >}}

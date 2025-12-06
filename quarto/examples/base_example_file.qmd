@@ -6,6 +6,12 @@ format:
    pdf:
      fontsize: 11pt
      pdf-engine: pdflatex
+
+jupyter: python3
+
+highlight-style: tango 
 ---
 
-{{< include 1_least_squares_fitting.qmd >}}
+# Test file
+
+Just testing this out.

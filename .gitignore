@@ -19,3 +19,9 @@ dist/
 
 # Ignore Jupyter Notebook checkpoints
 .ipynb_checkpoints/
+
+/.quarto/
+**/*.quarto_ipynb
+.Rproj.user
+
+.Renviron

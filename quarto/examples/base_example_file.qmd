@@ -2,16 +2,31 @@
 title: "Ejemplos" 
 author: "Raul Gomez"
 date: today
+
 format:
    pdf:
      fontsize: 11pt
      pdf-engine: pdflatex
+     include-in-header:
+       - "_header.tex"
+       - text: |
+           \fancypagestyle{multivariate_notes}{
+             \fancyhf{}
+             % Even pages (Left side)
+             \fancyhead[RE]{\rule[0ex]{0pt}{0ex} \LARGE \textbf{Equipo 1. Análisis Multivariado}}
+             \fancyhead[LE]{\includegraphics[height=1cm]{tecnologico-de-monterrey-blue}}
+             % Odd pages (Right side)
+             \fancyhead[RO]{\includegraphics[height=1cm]{tecnologico-de-monterrey-blue}}
+             \fancyhead[LO]{\rule[0ex]{0pt}{0ex} \LARGE \textbf{Etapa 1. Conociendo el negocio}}
+             % Footer
+             \rfoot{}
+             \cfoot{\thepage}
+             \lfoot{}
+             \setlength{\headsep}{10pt}
+           }
+           \pagestyle{multivariate_notes}
 
-jupyter: python3
-
-highlight-style: tango 
+jupyter: cryptocalc-env
 ---
 
-# Test file
-
-Just testing this out.
+{{< include RSA_encryption_protocol.qmd >}}

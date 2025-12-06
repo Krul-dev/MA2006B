@@ -1,0 +1,72 @@
+# Protocolo de Encriptación RSA
+
+En este notebook, mostraremos el proceso de encriptación RSA. Empezaremos por cargar las funciones que necesitamos:
+
+```{python}
+from cryptocalc import (
+  rsa_key_generation,
+   rsa_encryption,
+   rsa_decryption,
+   encode,
+   decode
+   )
+```
+
+Una vez que ya hemos cargado las librerías necesarias, empezamos por generar nuestras llaves *pública* y *privada*
+
+```{python}
+(public_key, private_key) = rsa_key_generation(1000)
+```
+
+En este caso la llave privada consiste de dos partes. Es muy importante que esta información no se divulgue.
+
+```{python}
+private_key
+```
+
+La llave pública, por otro lado, se debe de compartir con las partes interesadas, afín de que puedan encriptar sus mensajes. En este caso la llave pública a compartir es:
+
+```{python}
+public_key
+```
+
+Para demostrar como funciona este proceso, procedemos ahora a generar un mensaje que deseamos encriptar. Empezaremos con el simple 'Hello World!'
+
+```{python}
+plain_text = 'Hello World!'
+```
+
+Antes de poder encriptar este mensaje, necesitamos codificarlo en forma numérica:
+
+```{python}
+plain_message = encode(plain_text)
+plain_message
+```
+
+Utilizando la llave pública, podemos ahora generar el *mensaje encriptado*
+
+```{python}
+encrypted_message = rsa_encryption(public_key, plain_message)
+encrypted_message
+```
+
+Si este mensaje fuera interceptado por un adversario (digamos Eva) este sería el mensaje de texto que obtendría:
+
+```{python}
+encrypted_text = decode(encrypted_message)
+encrypted_text
+```
+
+Por otro lado, Alicia al momento de recibir este mensaje podría desencriptarlo primero utilizando su llave pública:
+
+```{python}
+decrypted_message = rsa_decryption(public_key,private_key, encrypted_message)
+decrypted_message
+```
+
+Para poder leer este mensaje basta con decodificarlo a mensaje de texto:
+
+```{python}
+decrypted_text = decode(decrypted_message)
+decrypted_text
+```

@@ -8,10 +8,9 @@ Created on Mon Apr  2 12:13:46 2018
 
 
 def gcd(n, m):
-    if m == 0:
-        return n
-    else:
-        return gcd(m, n-(n//m)*m)
+    while m != 0:
+        n, m = m, n % m
+    return n
 
 
 def extended_gcd(n, m):

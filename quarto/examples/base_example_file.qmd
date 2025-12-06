@@ -12,12 +12,8 @@ format:
        - text: |
            \fancypagestyle{multivariate_notes}{
              \fancyhf{}
-             % Even pages (Left side)
-             \fancyhead[RE]{\rule[0ex]{0pt}{0ex} \LARGE \textbf{Equipo 1. Análisis Multivariado}}
-             \fancyhead[LE]{\includegraphics[height=1cm]{tecnologico-de-monterrey-blue}}
-             % Odd pages (Right side)
-             \fancyhead[RO]{\includegraphics[height=1cm]{tecnologico-de-monterrey-blue}}
-             \fancyhead[LO]{\rule[0ex]{0pt}{0ex} \LARGE \textbf{Etapa 1. Conociendo el negocio}}
+             \fancyhead[R]{\rule[0ex]{0pt}{0ex} \LARGE \textbf{Protocolos Criptográficos} }
+             \fancyhead[L]{\includegraphics[height=1cm]{tecnologico-de-monterrey-blue}}
              % Footer
              \rfoot{}
              \cfoot{\thepage}

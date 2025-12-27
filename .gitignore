@@ -17,10 +17,14 @@ dist/
 .idea/
 *.swp  # Vim swap files
 
-# Ignore Jupyter Notebook checkpoints
+# Logs / notebooks / outputs
+*.log
+.quarto/
 .ipynb_checkpoints/
-
-/.quarto/
+**/.ipynb_checkpoints/
+.jupyter_ystore.db
+**/.jupyter_ystore.db
+output/
 **/*.quarto_ipynb
 .Rproj.user
 

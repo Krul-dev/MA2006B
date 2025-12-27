@@ -10,7 +10,7 @@ description = "Paquete de apoyo para el curso MA2006B Uso de álgebras modernas 
 authors = [
   { name = "Raul Gomez", email = "rgomez@tec.mx" }
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 dependencies = [
   "numpy",
   "matplotlib",

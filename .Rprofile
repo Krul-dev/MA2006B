@@ -1,5 +1,9 @@
 # Project-local R configuration
 
-if (file.exists(".venv/bin/python")) {
-  Sys.setenv(RETICULATE_PYTHON = normalizePath(".venv/bin/python"))
+py <- file.path(getwd(), ".venv", "bin", "python")
+
+if (file.exists(py)) {
+  Sys.setenv(RETICULATE_PYTHON = py)
+  options(reticulate.python = py)
 }
+

@@ -21,8 +21,6 @@ format:
              \setlength{\headsep}{10pt}
            }
            \pagestyle{multivariate_notes}
-
-jupyter: cryptocalc-env
 ---
 
 {{< include RSA_encryption_protocol.qmd >}}

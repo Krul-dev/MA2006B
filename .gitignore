@@ -29,3 +29,5 @@ output/
 .Rproj.user
 
 .Renviron
+
+/.quarto/

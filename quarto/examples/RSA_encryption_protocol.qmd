@@ -24,7 +24,7 @@ En este caso la llave privada consiste de dos partes. Es muy importante que esta
 private_key
 ```
 
-La llave pública, por otro lado, se debe de compartir con las partes interesadas, afín de que puedan encriptar sus mensajes. En este caso la llave pública a compartir es:
+La llave pública, por otro lado, se debe de compartir con las partes interesadas, a fín de que puedan encriptar sus mensajes. En este caso la llave pública a compartir es:
 
 ```{python}
 public_key

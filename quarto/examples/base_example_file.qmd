@@ -21,6 +21,8 @@ format:
              \setlength{\headsep}{10pt}
            }
            \pagestyle{multivariate_notes}
+
+jupyter: python3
 ---
 
 {{< include RSA_encryption_protocol.qmd >}}

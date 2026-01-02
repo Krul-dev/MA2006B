@@ -20,8 +20,11 @@ dist/
 # JupyterLab / Jupyter Desktop UI state
 .jupyter/
 
-# R local profile
+# R local files
 .Rprofile
+.Rhistory
+.RData
+.Ruserdata
 
 # Logs / notebooks / outputs
 *.log

@@ -20,6 +20,9 @@ dist/
 # JupyterLab / Jupyter Desktop UI state
 .jupyter/
 
+# R local profile
+.Rprofile
+
 # Logs / notebooks / outputs
 *.log
 .quarto/

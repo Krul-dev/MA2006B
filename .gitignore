@@ -17,6 +17,9 @@ dist/
 .idea/
 *.swp  # Vim swap files
 
+# JupyterLab / Jupyter Desktop UI state
+.jupyter/
+
 # Logs / notebooks / outputs
 *.log
 .quarto/

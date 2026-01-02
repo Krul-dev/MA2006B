@@ -19,6 +19,7 @@ dist/
 
 # JupyterLab / Jupyter Desktop UI state
 .jupyter/
+.jupyter_ystore.db
 
 # R local files
 .Rprofile

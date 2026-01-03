@@ -3,6 +3,10 @@
 
 # src/cryptocalc/__init__.py
 
+# Define the package version
+from importlib.metadata import version as _version
+__version__ = _version("MA2006B")
+
 # Importing constants and functions for public use
 from cryptocalc.euclid_algorithm import (
     gcd,

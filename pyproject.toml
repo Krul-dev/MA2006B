@@ -22,7 +22,7 @@ dependencies = [
   "tornado",
   "traitlets",
   "pyyaml",
-  "ipykernel",
+  "jupyter>=1.1.1",
 ]
 
 [project.scripts]

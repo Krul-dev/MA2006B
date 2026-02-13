@@ -29,3 +29,4 @@ dependencies = [
 [project.scripts]
 ecc_test = "cryptocalc.ecc_test:main"
 rsa_cryptography_test = "cryptocalc.rsa_cryptography_test:main"
+diffie_hellman_key_generator = "cryptocalc.diffie_hellman_key_generator:main"

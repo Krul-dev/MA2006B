@@ -3,82 +3,137 @@
 """
 Author: Raul Gomez
 Date: 2025-04-21
-Description: 
+Description:
 """
 
-from cryptocalc import exp_mod
+from cryptocalc import generate_private_key 
+from cryptocalc.modular_arithmetic import exp_mod
+from cryptocalc.euclid_algorithm import fast_extended_gcd
+from cryptocalc.encoding import encode, decode
 import os
 
 
-# Example safe prime (2048-bit) from RFC 3526
-RFC_3526_SAFE_PRIME = int(
-    "FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E08"
-    "8A67CC74020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B"
-    "302B0A6DF25F14374FE1356D6D51C245E485B576625E7EC6F44C42E9"
-    "A63A36210000000000090563", 16
-)
-# Sophie Germain prime (q = (p-1)//2)
-RFC_3526_SOPHIE_PRIME = (RFC_3526_SAFE_PRIME - 1) // 2
+def _uniform_random_below(upper_bound):
+    """Return a uniform random integer in [0, upper_bound-1]."""
+    if upper_bound <= 0:
+        raise ValueError("upper_bound must be positive")
 
-
-def generate_private_key(q):
-    """Return a uniformly random private key in [2**256, q-1].
-
-    Args:
-        q (int): A Sophie Germain prime that defines the upper bound.
-
-    Raises:
-        ValueError: If `q` is smaller than 2**384, which does not leave
-            enough entropy for a secure private key.
-    """
-    # Validate q is big enough
-    if q < 2**384:
-        raise ValueError("q must be at least 2^384")
-    # Calculate the byte length of q
-    q_bytes = (q.bit_length() + 7) // 8  # Byte length of q
+    num_bytes = (upper_bound.bit_length() + 7) // 8
     while True:
-        # Use os.urandom for cryptographic random bytes
-        random_bytes = os.urandom(q_bytes)
-        private_key = int.from_bytes(random_bytes, byteorder="big")
-        if 2**256 <= private_key <= q - 1:
-            return private_key
+        candidate = int.from_bytes(os.urandom(num_bytes), byteorder="big")
+        if candidate < upper_bound:
+            return candidate
 
 
-def diffie_hellman_public_key_generator(safe_prime, primitive_root, private_key):
+def _uniform_random_in_range(lower_bound, upper_bound):
+    """Return a uniform random integer in [lower_bound, upper_bound]."""
+    if lower_bound > upper_bound:
+        raise ValueError("lower_bound must be <= upper_bound")
+
+    width = upper_bound - lower_bound + 1
+    return lower_bound + _uniform_random_below(width)
+
+def elgamal_public_key_generator(safe_prime, primitive_root, private_key):
     """
-    Generate a public key using Diffie-Hellman key exchange.
+    Generate a public key using ElGamal over Z/pZ.
 
     Parameters:
     safe_prime (int): A safe prime number.
     primitive_root (int): A primitive root modulo the safe prime.
-    private_key (int): The private key of the user.
+    private_key (int): The private key x.
 
     Returns:
-    int: The public key.
+    int: The public component y = g^x mod p.
     """
     p = safe_prime
     g = primitive_root
-    a = private_key
-    public_key = exp_mod((g, p), a)
-    # Return the first element of the tuple (the result of the exponentiation)
+    x = private_key
+    public_key = exp_mod((g, p), x)
     return public_key[0]
 
 
-def diffie_hellman_shared_key_generator(safe_prime, public_key, private_key):
+def elgamal_key_generation(safe_prime, primitive_root):
     """
-    Generate a shared key using Diffie-Hellman key exchange.
+    Generate an ElGamal key pair.
 
     Parameters:
-    safe_prime (int): A safe prime number.
-    public_key (int): The public key of the other user.
-    private_key (int): The private key of the user.
+    safe_prime (int): Modulus p.
+    primitive_root (int): Generator g.
 
     Returns:
-    int: The shared key.
+    tuple: ((p, g, y), x) where y = g^x mod p.
     """
-    p = safe_prime 
-    B = public_key
-    a = private_key
-    shared_key = exp_mod((B, p), a)
-    # Return the first element of the tuple (the result of the exponentiation)
-    return shared_key[0]
+    p = safe_prime
+    g = primitive_root
+    x = _uniform_random_in_range(2, p - 2)
+    y = elgamal_public_key_generator(p, g, x)
+    public_key = (p, g, y)
+    private_key = x
+    key_ring = (public_key, private_key)
+    return key_ring
+
+
+def elgamal_encryption(public_key, plain_message):
+    """
+    Encrypt an integer with ElGamal.
+
+    Parameters:
+    public_key (tuple): (p, g, y).
+    plain_message (int): Integer m with 0 <= m < p.
+
+    Returns:
+    tuple: Ciphertext (c1, c2).
+    """
+    p = public_key[0]
+    g = public_key[1]
+    y = public_key[2]
+    m = plain_message
+
+    if not 0 <= m < p:
+        raise ValueError("plain_message must satisfy 0 <= plain_message < p")
+
+    k = _uniform_random_in_range(2, p - 2)
+    c1 = exp_mod((g, p), k)[0]
+    s = exp_mod((y, p), k)[0]
+    c2 = (m * s) % p
+    encrypted_message = (c1, c2)
+    return encrypted_message
+
+
+def elgamal_decryption(public_key, private_key, encrypted_message):
+    """
+    Decrypt an ElGamal ciphertext.
+
+    Parameters:
+    public_key (tuple): (p, g, y).
+    private_key (int): Private key x.
+    encrypted_message (tuple): Ciphertext (c1, c2).
+
+    Returns:
+    int: Decrypted integer message.
+    """
+    p = public_key[0]
+    x = private_key
+    c1 = encrypted_message[0]
+    c2 = encrypted_message[1]
+
+    s = exp_mod((c1, p), x)[0]
+    s_inverse = fast_extended_gcd(p, s)[1] % p
+    decrypted_message = (c2 * s_inverse) % p
+    return decrypted_message
+
+
+def elgamal_text_encryption(public_key, plain_text_message):
+    """Encode text to an integer and encrypt it with ElGamal."""
+    plain_message = encode(plain_text_message)
+    encrypted_message = elgamal_encryption(public_key, plain_message)
+    return encrypted_message
+
+
+def elgamal_text_decryption(public_key, private_key, encrypted_message):
+    """Decrypt ElGamal ciphertext and decode it as text."""
+    decrypted_message = elgamal_decryption(
+        public_key, private_key, encrypted_message
+    )
+    decrypted_text_message = decode(decrypted_message)
+    return decrypted_text_message

@@ -35,11 +35,14 @@ from cryptocalc.ecc import (
 )
 
 from cryptocalc.diffie_hellman import (
+    diffie_hellman_public_key_generator,
+    diffie_hellman_shared_key_generator,
+)
+
+from rfc_specification import (
     RFC_3526_SAFE_PRIME,
     RFC_3526_SOPHIE_PRIME,
     generate_private_key,
-    diffie_hellman_public_key_generator,
-    diffie_hellman_shared_key_generator,
 )
 
 from cryptocalc.rsa_cryptography import (

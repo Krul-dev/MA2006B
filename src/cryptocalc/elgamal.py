@@ -6,10 +6,8 @@ Date: 2025-04-21
 Description:
 """
 
-from cryptocalc import generate_private_key 
 from cryptocalc.modular_arithmetic import exp_mod
 from cryptocalc.euclid_algorithm import fast_extended_gcd
-from cryptocalc.encoding import encode, decode
 import os
 
 
@@ -121,19 +119,3 @@ def elgamal_decryption(public_key, private_key, encrypted_message):
     s_inverse = fast_extended_gcd(p, s)[1] % p
     decrypted_message = (c2 * s_inverse) % p
     return decrypted_message
-
-
-def elgamal_text_encryption(public_key, plain_text_message):
-    """Encode text to an integer and encrypt it with ElGamal."""
-    plain_message = encode(plain_text_message)
-    encrypted_message = elgamal_encryption(public_key, plain_message)
-    return encrypted_message
-
-
-def elgamal_text_decryption(public_key, private_key, encrypted_message):
-    """Decrypt ElGamal ciphertext and decode it as text."""
-    decrypted_message = elgamal_decryption(
-        public_key, private_key, encrypted_message
-    )
-    decrypted_text_message = decode(decrypted_message)
-    return decrypted_text_message

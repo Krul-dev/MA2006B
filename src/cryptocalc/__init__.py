@@ -58,6 +58,12 @@ from cryptocalc.encoding import (
     decode,
 )
 
+from cryptocalc.elgamal import (
+    elgamal_public_key_generator,
+    elgamal_key_generation,
+    elgamal_encryption,
+    elgamal_decryption
+)
 
 # Define public API
 __all__ = [
@@ -90,4 +96,8 @@ __all__ = [
     "rsa_text_decryption",
     "encode",
     "decode",
+    "elgamal_public_key_generator",
+    "elgamal_key_generation",
+    "elgamal_encryption",
+    "elgamal_decryption"
 ]

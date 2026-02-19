@@ -10,28 +10,52 @@ Basic functions and algorithms for implementing Elliptic Curve Cryptography
 
 from sympy import isprime
 
-from cryptocalc import divide_mod, jacobi_symbol
+INFTY = "infty"
+
+from cryptocalc import (
+        divide_mod,
+        jacobi_symbol,
+        exp_mod
+        )
+
 
 class EllipticCurve:
     def __init__(self, p, c1, c0):
-        self.p = p
-        self.c1 = c1
-        self.c0 = c0
-
-        if not isprime(p): 
+        if not isprime(p):
             raise ValueError("The value of p must be a prime number.")
 
-        self.discriminant = (-16*(4*(c1**3) + 27*(c0**2))) % p 
+        a3 = exp_mod((c1 % p, p), 3)[0]
+        b2 = exp_mod((c0 % p, p), 2)[0]
+        discriminant = (-16 * (4 * a3 + 27 * b2)) % p
 
         if discriminant == 0:
             raise ValueError("The discriminant of the elliptic curve is 0, so it is not a valid elliptic curve.")
 
-        self.j_invariant = divide_mod(((-48*c1)**3, p), (self.discriminant, p))[0]
+        self.p = p
+        self.c1 = c1 % p
+        self.c0 = c0 % p
+        self.discriminant = discriminant
 
+    def j_invariant(self):
+        numerator = exp_mod(((-48 * self.c1) % self.p, self.p), 3)[0]
+        return divide_mod((numerator, self.p), (self.discriminant, self.p))[0]
 
+    def is_point_on_curve(self, P):
+        if P != INFTY and (not isinstance(P, tuple) or len(P) != 2):
+            raise TypeError("Point must be a tuple (x, y) or 'infty'.")
 
-
+        if P == INFTY:
+            return True
     
+        x, y = P
+        p = self.p
+        x %= p
+        y %= p
+    
+        lhs = exp_mod((y, p), 2)[0]
+        rhs = (exp_mod((x, p), 3)[0] + (self.c1 * x) + self.c0) % p
+        return lhs == rhs
+
 
 # This function calculates the denominator needed to double a point in an
 # elliptic curve. If the denominator is 0, then we now that the result will be
@@ -102,8 +126,8 @@ elliptic curve
 # considering the points.
 def elliptic_inverse(P, q):
     # We first consider the special case in which P is the point at infinity.
-    if P == "infty":
-        return "infty"
+    if P == INFTY:
+        return INFTY
     # Here we consider the general case.
     else:
         return (P[0], -P[1] % 1)
@@ -119,12 +143,12 @@ def elliptic_inverse(P, q):
 # considering the points.
 def elliptic_double(P, E, q):
     # We first consider the special case in which P is the point at infinity.
-    if P == "infty":
-        return "infty"
+    if P == INFTY:
+        return INFTY
     # Now we consider the case in which P is its own inverse, and hence
     # doubling it gives us the point at infinity.
     elif e_denominator_of_double(P, E, q) == 0:
-        return "infty"
+        return INFTY
     # Here we consider the generic case.
     else:
         return e_double(P, E, q)
@@ -142,10 +166,10 @@ def elliptic_double(P, E, q):
 # considering the points.
 def elliptic_addition(P, Q, E, q):
     # We first consider the special case in which P is the point at infinity.
-    if P == "infty":
+    if P == INFTY:
         return Q
     # We then consider the special case in which Q is the point at infinity.
-    elif Q == "infty":
+    elif Q == INFTY:
         return P
     # Now we consider the case in which the two points are equal. In this case
     # we call the doubling function to compute the result.
@@ -153,7 +177,7 @@ def elliptic_addition(P, Q, E, q):
         return elliptic_double(P, E, q)
     # If the denominator is 0, then we obtain the point at infinity.
     elif e_denominator_of_sum(P, Q, E, q) == 0:
-        return "infty"
+        return INFTY
     # Here we consider the generic case.
     else:
         return e_sum(P, Q, E, q)
@@ -173,8 +197,8 @@ def elliptic_multiplication(m, P, E, q):
     # First we consider the case in which P is the point at infinity or m is
     # equal to 0 (mod q) in which case we obtain the point at infinity as a
     # result.
-    if m % q == 0 or P == "infty":
-        return "infty"
+    if m % q == 0 or P == INFTY:
+        return INFTY
     # If m is negative, then we call the function again replacing m by -m and P
     # by its inverse.
     elif m < 0:
@@ -195,7 +219,7 @@ def elliptic_multiplication(m, P, E, q):
 # Note: For larger values of q, this operation is very intensive in terms of
 # time and storage space.
 def points_of_elliptic_curve(E, q):
-    E_q = ["infty"]
+    E_q = [INFTY]
     for x in list(range(q)):
         if jacobi_symbol((pow(x, 3, q)+E[0]*x+E[1]) % q, q) != -1:
             for y in list(range(q)):

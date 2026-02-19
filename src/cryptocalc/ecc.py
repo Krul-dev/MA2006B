@@ -130,7 +130,7 @@ def elliptic_inverse(P, q):
         return INFTY
     # Here we consider the general case.
     else:
-        return (P[0], -P[1] % 1)
+        return (P[0], -P[1] % q)
 
 
 # This function implements the operation of doubling a point in an elliptic
@@ -197,12 +197,12 @@ def elliptic_multiplication(m, P, E, q):
     # First we consider the case in which P is the point at infinity or m is
     # equal to 0 (mod q) in which case we obtain the point at infinity as a
     # result.
-    if m % q == 0 or P == INFTY:
+    if m == 0 or P == INFTY:
         return INFTY
     # If m is negative, then we call the function again replacing m by -m and P
     # by its inverse.
     elif m < 0:
-        return elliptic_multiplication(-m, elliptic_inverse(P, q))
+        return elliptic_multiplication(-m, elliptic_inverse(P, q), E, q)
     # If m is even, then we call the function again replacing m by m/2 and we
     # double the result.
     elif m % 2 == 0:

@@ -6,7 +6,10 @@ Basic functions and algorithms for implementing Elliptic Curve Cryptography
 """
 
 
-from cryptocalc import (elliptic_multiplication, points_of_elliptic_curve)
+from cryptocalc import (
+        elliptic_multiplication,
+        points_of_elliptic_curve
+        )
 
 
 def main():

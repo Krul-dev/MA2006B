@@ -9,7 +9,7 @@ Basic functions and algorithms for implementing Elliptic Curve Cryptography
 """
 
 
-from cryptocalc import divide_mod
+from cryptocalc import divide_mod, jacobi_symbol
 
 # This function calculates the denominator needed to double a point in an
 # elliptic curve. If the denominator is 0, then we now that the result will be

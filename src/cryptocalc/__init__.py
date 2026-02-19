@@ -22,10 +22,10 @@ from cryptocalc.modular_arithmetic import (
     naive_exp_mod,
     exp_mod,
     chinese_remainder,
+    jacobi_symbol,
 )
 
 from cryptocalc.ecc import (
-    jacobi_symbol,
     discriminant,
     elliptic_inverse,
     elliptic_double,

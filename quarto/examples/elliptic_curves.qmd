@@ -1,0 +1,65 @@
+# Curvas Elípticas
+
+En este notebook, mostraremos un ejemplo de una curva elíptica y las operaciones que se pueden realizar sobre sus puntos. Empezaremos por cargar las funciones que necesitamos:
+
+```{python}
+from cryptocalc import EllipticCurve
+```
+
+Usaremos la curva elíptica:
+
+$$
+y^2 = x^3 + 6x + 23
+$$
+
+sobre el campo finito $\mathbb{F}_{103}$. Su discriminante y $j$-invariante son:
+
+```{python}
+a = 6
+b = 23
+p = 103
+
+curve = EllipticCurve(p, a, b)
+
+print(f"Discriminante modulo p: {curve.get_discriminant()}")
+print(f"j-invariante modulo p: {curve.j_invariant()}")
+```
+
+Como nuestro campo base es pequeño, podemos calcular todos sus puntos de manera explícita:
+
+```{python}
+E_p = curve.points()
+print("Lista de puntos sobre la curva:\n")
+for i, point in enumerate(E_p, start=1):
+    print(f"{i}: {point}")
+```
+
+Consideramos ahora dos puntos sobre la curva: $$
+P = (95, 9) \qquad \text{y} \qquad Q = (79,28)
+$$ Calculamos ahora:
+
+```{python}
+P = (95, 9)
+Q = (79, 28)
+R = curve.addition(P,Q)
+S = curve.double(P)
+T = curve.inverse(P)
+
+print(f"P + Q = {R}")
+print(f"2P = {S}")
+print(f"-P = {T}")
+```
+
+Como aplicación a estas operaciones en curvas elípticas, consideraremos el problema de guardar los hash de ciertos passwords. Para este ejemplo, dado un password $m$ calcularemos $mP$ como su hash:
+
+```{python}
+list_of_passwords = [20, 27, 72]
+list_of_hashed_passwords = [curve.multiplication(m, P) for m in list_of_passwords]
+
+print("")
+print("Contrasenas originales:")
+print(list_of_passwords)
+print("\nHashes almacenados:")
+print(list_of_hashed_passwords)
+print("")
+```

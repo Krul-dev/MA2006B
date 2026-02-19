@@ -42,6 +42,9 @@ class EllipticCurve:
         numerator = exp_mod(((-48 * self.c1) % self.p, self.p), 3)[0]
         return divide_mod((numerator, self.p), (self.discriminant, self.p))[0]
 
+    def get_discriminant(self): 
+        return self.discriminant
+
     # This function checks if a given point P belongs to the elliptic curve.
     def is_point_on_curve(self, P):
         if P != INFTY and (not isinstance(P, tuple) or len(P) != 2):

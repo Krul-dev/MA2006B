@@ -65,6 +65,10 @@ from cryptocalc.elgamal import (
     elgamal_decryption
 )
 
+from cryptocalc.ecc import (
+    EllipticCurve,
+)
+
 # Define public API
 __all__ = [
     "gcd",
@@ -99,5 +103,6 @@ __all__ = [
     "elgamal_public_key_generator",
     "elgamal_key_generation",
     "elgamal_encryption",
-    "elgamal_decryption"
+    "elgamal_decryption",
+    "EllipticCurve",
 ]

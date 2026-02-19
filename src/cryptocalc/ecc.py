@@ -8,8 +8,30 @@ Created on Wed May  9 20:02:08 2018
 Basic functions and algorithms for implementing Elliptic Curve Cryptography
 """
 
+from sympy import isprime
 
 from cryptocalc import divide_mod, jacobi_symbol
+
+class EllipticCurve:
+    def __init__(self, p, c1, c0):
+        self.p = p
+        self.c1 = c1
+        self.c0 = c0
+
+        if not isprime(p): 
+            raise ValueError("The value of p must be a prime number.")
+
+        self.discriminant = (-16*(4*(c1**3) + 27*(c0**2))) % p 
+
+        if discriminant == 0:
+            raise ValueError("The discriminant of the elliptic curve is 0, so it is not a valid elliptic curve.")
+
+        self.j_invariant = divide_mod(((-48*c1)**3, p), (self.discriminant, p))[0]
+
+
+
+
+    
 
 # This function calculates the denominator needed to double a point in an
 # elliptic curve. If the denominator is 0, then we now that the result will be

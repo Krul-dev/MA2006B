@@ -9,45 +9,7 @@ Basic functions and algorithms for implementing Elliptic Curve Cryptography
 """
 
 
-from cryptocalc.modular_arithmetic import divide_mod
-
-# I don't think that this function belongs to here. I need to find a better
-# place to put it.
-# Computes the Jacobi symbol (a/n), assuming that 0 <= a < n and that n is odd
-
-
-def jacobi_symbol(a, n):
-    # The first terminating case. When a is equal to zero, the value of
-    # the Jacobi symbol is also zero.
-    if a == 0:
-        return 0
-    # The second terminating case. When a is equal to one, the value of
-    # the Jacobi symbol is also one.
-    elif a == 1:
-        return 1
-    # This part uses the law of quadratic reciprocity to compute the Jacobi
-    # symbol for a non-terminal case. We first look at the case
-    # where a is even.
-    elif a % 2 == 0:
-        # To implement this part, we use the second supplement of the law of
-        # quadratic reciprocity.
-        if n % 8 == 1 or n % 8 == 7:
-            return jacobi_symbol(a//2, n)
-        else:
-            return -jacobi_symbol(a//2, n)
-    # For this part we simply use the law of quadratic reciprocity to simplify
-    # the recursively call the Jacobi_symbol function with smaller arguments.
-    elif a % 4 == 3 and n % 4 == 3:
-        return -jacobi_symbol(n % a, a)
-    else:
-        return jacobi_symbol(n % a, a)
-
-
-"""
-These are the basic functions for computing double and addition of
-point in an elliptic curve.
-"""
-
+from cryptocalc import divide_mod
 
 # This function calculates the denominator needed to double a point in an
 # elliptic curve. If the denominator is 0, then we now that the result will be

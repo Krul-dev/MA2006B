@@ -58,3 +58,39 @@ def chinese_remainder(x, y):
     n = p*q
     z = b*p*r + a*q*s
     return simplify_mod(z, n)
+
+
+
+def jacobi_symbol(a, n):
+    """
+    Calculates the Jacobi symbol (a/n) using the law of quadratic reciprocity. 
+    Parameters:
+        a: an integer
+        n: an odd positive integer
+    Returns:
+        The value of the Jacobi symbol (a/n).
+    """
+    # The first terminating case. When a is equal to zero, the value of
+    # the Jacobi symbol is also zero.
+    if a == 0:
+        return 0
+    # The second terminating case. When a is equal to one, the value of
+    # the Jacobi symbol is also one.
+    elif a == 1:
+        return 1
+    # This part uses the law of quadratic reciprocity to compute the Jacobi
+    # symbol for a non-terminal case. We first look at the case
+    # where a is even.
+    elif a % 2 == 0:
+        # To implement this part, we use the second supplement of the law of
+        # quadratic reciprocity.
+        if n % 8 == 1 or n % 8 == 7:
+            return jacobi_symbol(a//2, n)
+        else:
+            return -jacobi_symbol(a//2, n)
+    # For this part we simply use the law of quadratic reciprocity to simplify
+    # the recursively call the Jacobi_symbol function with smaller arguments.
+    elif a % 4 == 3 and n % 4 == 3:
+        return -jacobi_symbol(n % a, a)
+    else:
+        return jacobi_symbol(n % a, a)

@@ -18,7 +18,7 @@ Una vez que ya hemos cargado las librerías necesarias, empezamos por generar nu
 (public_key, private_key) = rsa_key_generation(1000)
 ```
 
-En este caso la llave privada consiste de dos partes. Es muy importante que esta información no se divulgue.
+Mostramos ahora la llave privada que generamos. En la práctica, es muy importante que esta información no se divulgue.
 
 ```{python}
 private_key
@@ -57,7 +57,7 @@ encrypted_text = decode(encrypted_message)
 encrypted_text
 ```
 
-Por otro lado, Alicia al momento de recibir este mensaje podría desencriptarlo primero utilizando su llave pública:
+Por otro lado, Alicia al momento de recibir este mensaje podría desencriptarlo primero utilizando su llave privada:
 
 ```{python}
 decrypted_message = rsa_decryption(public_key,private_key, encrypted_message)

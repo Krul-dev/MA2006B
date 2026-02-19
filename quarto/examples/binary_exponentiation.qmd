@@ -1,0 +1,102 @@
+# Exponenciación Binaria
+
+En este notebook, mostraremos de manera práctica la diferencia en la velocidad de ejecución entre el algoritmo de exponenciación binaria comparado con el algoritmo de exponenciación ingenua, sin optimizar. Empezaremos por cargar las funciones que necesitamos:
+
+```{python}
+from cryptocalc import (
+    RFC_3526_SAFE_PRIME,
+    exp_mod,
+    naive_exp_mod
+)
+```
+
+Ahora fijaremos un número primo que utilizaremos como módulo y un valor base.
+
+```{python}
+p = RFC_3526_SAFE_PRIME
+g = 2
+x = (g, p)
+x
+```
+
+Para comparar los dos algoritmos, mediremos el tiempo que llevar elevar el punto base a la potencia $n = 100$ usando ambos métodos. Con exponenciación binaria:
+
+```{python}
+import time
+
+start = time.perf_counter()
+exp_mod(x, 100)
+end = time.perf_counter()
+
+print(f"Elapsed time: {end - start:.6f} seconds")
+```
+
+Usando exponenciación ingenua:
+
+```{python}
+start = time.perf_counter()
+naive_exp_mod(x, 100)
+end = time.perf_counter()
+
+print(f"Elapsed time: {end - start:.6f} seconds")
+```
+
+Como podemos observar, no hay una diferencia muy significativa entre ambos algoritmos por el momento. Elevaremos ahora el punto base a la potencia $n = 100000$. Con exponenciación binaria:
+
+```{python}
+start = time.perf_counter()
+exp_mod(x, 100000)
+end = time.perf_counter()
+
+print(f"Elapsed time: {end - start:.6f} seconds")
+```
+
+Usando exponenciación ingenua:
+
+```{python}
+start = time.perf_counter()
+naive_exp_mod(x, 100000)
+end = time.perf_counter()
+
+print(f"Elapsed time: {end - start:.6f} seconds")
+```
+
+Podemos notar que en este caso ya existe una diferencia significativa entre ambos algoritmos. Repetiremos ahora este proceso tomando como potencia $n = 10000000$. Con exponenciación binaria:
+
+```{python}
+start = time.perf_counter()
+exp_mod(x, 10000000)
+end = time.perf_counter()
+
+print(f"Elapsed time: {end - start:.6f} seconds")
+```
+
+Usando exponenciación ingenua:
+
+```{python}
+start = time.perf_counter()
+naive_exp_mod(x, 10000000)
+end = time.perf_counter()
+
+print(f"Elapsed time: {end - start:.6f} seconds")
+```
+
+Aquí podemos notar como la diferencia entre ambos algoritmos se va haciendo más palpable. Finalmente, tomaremos como potencia $n = 1000000000$. Con exponenciación binaria:
+
+```{python}
+start = time.perf_counter()
+exp_mod(x, 1000000000)
+end = time.perf_counter()
+
+print(f"Elapsed time: {end - start:.6f} seconds")
+```
+
+Usando exponenciación ingenua:
+
+```{python}
+start = time.perf_counter()
+naive_exp_mod(x, 1000000000)
+end = time.perf_counter()
+
+print(f"Elapsed time: {end - start:.6f} seconds")
+```

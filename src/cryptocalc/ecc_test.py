@@ -6,29 +6,25 @@ Basic functions and algorithms for implementing Elliptic Curve Cryptography
 """
 
 
-from cryptocalc import (
-        elliptic_multiplication,
-        points_of_elliptic_curve
-        )
+from cryptocalc import EllipticCurve
 
 
 def main():
-    # We set our elliptic curve with parameters a=0 and b=1, that is, our elliptic
-    # curve corresponds to the equation y^2 = x^3 +1.
+    # We set our elliptic curve with parameters a=6 and b=23, that is, our
+    # elliptic curve corresponds to the equation y^2 = x^3 + 6x + 23.
     a = 6
-
     b = 23
-    E = (a, b)
 
-    # We set out base field to be F_101.
-    q = 103
+    # We set our base field to be F_103.
+    p = 103
+    curve = EllipticCurve(p, a, b)
 
     # We compute all the points of the elliptic curve.
     # We should notice that in general this is not practical, but in this very
     # small example, it can be done.
-    E_q = points_of_elliptic_curve(E, q)
+    E_q = curve.points()
 
-    # As a base point, we choose the point P=(95,47)
+    # As a base point, we choose the point P=(95,9)
     P = (95, 9)
 
     # We now create a list in which we store the passwords 20, 27 and 72
@@ -38,9 +34,9 @@ def main():
     list_of_hashed_passwords = []
 
     # We now store the hash corresponding to the passwords 20, 27 and 72
-    hash_of_password_1 = elliptic_multiplication(20, P, E, q)
-    hash_of_password_2 = elliptic_multiplication(27, P, E, q)
-    hash_of_password_3 = elliptic_multiplication(72, P, E, q)
+    hash_of_password_1 = curve.multiplication(20, P)
+    hash_of_password_2 = curve.multiplication(27, P)
+    hash_of_password_3 = curve.multiplication(72, P)
 
     list_of_hashed_passwords.append(hash_of_password_1)
     list_of_hashed_passwords.append(hash_of_password_2)
@@ -50,8 +46,8 @@ def main():
 
     print("")
     print("This are the results of the test:  \n")
-    print("We are working with the elliptic curve y^2=x^3+1. \n")
-    print("As a base field, we will use the field with 101 elements. \n")
+    print("We are working with the elliptic curve y^2=x^3+6x+23. \n")
+    print("As a base field, we will use the field with 103 elements. \n")
     print("The list of all the points belonging to this ")
     print("elliptic curve is the following: \n")
     i = 0

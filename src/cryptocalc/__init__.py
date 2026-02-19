@@ -26,12 +26,7 @@ from cryptocalc.modular_arithmetic import (
 )
 
 from cryptocalc.ecc import (
-    discriminant,
-    elliptic_inverse,
-    elliptic_double,
-    elliptic_addition,
-    elliptic_multiplication,
-    points_of_elliptic_curve,
+    EllipticCurve,
 )
 
 from cryptocalc.diffie_hellman import (
@@ -65,10 +60,6 @@ from cryptocalc.elgamal import (
     elgamal_decryption
 )
 
-from cryptocalc.ecc import (
-    EllipticCurve,
-)
-
 # Define public API
 __all__ = [
     "gcd",
@@ -82,12 +73,6 @@ __all__ = [
     "exp_mod",
     "chinese_remainder",
     "jacobi_symbol",
-    "discriminant",
-    "elliptic_inverse",
-    "elliptic_double",
-    "elliptic_addition",
-    "elliptic_multiplication",
-    "points_of_elliptic_curve",
     "diffie_hellman_public_key_generator",
     "diffie_hellman_shared_key_generator",
     "RFC_3526_SAFE_PRIME",

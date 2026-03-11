@@ -27,6 +27,9 @@ dist/
 .RData
 .Ruserdata
 
+# Test directory 
+tests/
+
 # Logs / notebooks / outputs
 *.log
 .quarto/

@@ -42,6 +42,7 @@ from cryptocalc.rfc_specification import (
 
 from cryptocalc.sec_specification import (
     SECP256K1,
+    generate_elliptic_private_key,
 )
 
 from cryptocalc.rsa_cryptography import (
@@ -95,4 +96,5 @@ __all__ = [
     "elgamal_decryption",
     "EllipticCurve",
     "SECP256K1",
+    "generate_elliptic_private_key",
 ]

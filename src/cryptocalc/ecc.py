@@ -46,7 +46,7 @@ class EllipticCurve:
         return self.discriminant
 
     # This function checks if a given point P belongs to the elliptic curve.
-    def is_point_on_curve(self, P):
+    def is_point_in_curve(self, P):
         if P != INFTY and (not isinstance(P, tuple) or len(P) != 2):
             raise TypeError("Point must be a tuple (x, y) or 'infty'.")
 
@@ -147,3 +147,14 @@ class EllipticCurve:
                     if pow(y, 2, p) == rhs:
                         E_q.append((x, y))
         return E_q
+
+    # This function computes the order of a point P in the elliptic curve.
+    def order(self, P):
+        if P == INFTY:
+            return 1
+        current = P
+        count = 1
+        while current != INFTY:
+            current = self.addition(current, P)
+            count += 1
+        return count

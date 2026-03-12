@@ -56,6 +56,8 @@ from cryptocalc.rsa_cryptography import (
 from cryptocalc.encoding import (
     encode,
     decode,
+    sha256_of_integer,
+    sha256_of_sentence,
 )
 
 from cryptocalc.elgamal import (
@@ -90,6 +92,8 @@ __all__ = [
     "rsa_text_decryption",
     "encode",
     "decode",
+    "sha256_of_integer",
+    "sha256_of_sentence",
     "elgamal_public_key_generator",
     "elgamal_key_generation",
     "elgamal_encryption",

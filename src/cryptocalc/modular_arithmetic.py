@@ -32,7 +32,7 @@ def divide_mod(x, y):
 
 def naive_exp_mod(x, m):
     result = 1
-    for i in range(m):
+    for _ in range(m):
         result = (result * x[0]) % x[1]
     return (result, x[1])
 

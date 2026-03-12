@@ -1,0 +1,55 @@
+# Protocolo Diffie-Hellman de Curvas Elípticas (ECDH) para la generación de una llave compartida
+
+En este notebook, mostraremos el proceso de generar una llave compartida utilizando el protocolo ECDH. Empezaremos por cargar las funciones que necesitamos:
+
+```{python}
+from cryptocalc import (
+    EllipticCurve,
+    SECP256K1,
+    generate_elliptic_private_key,
+)
+```
+
+Para este ejemplo, utilizaremos la curva `secp256k1` la cual se encuentra especificada en el documento [SEC 2: Recommended Elliptic Curve Domain Parameters](https://www.secg.org/sec2-v2.pdf) y generaremos las llaves secretas de Alicia y Beto de manera aleatoria:
+
+```{python}
+p = SECP256K1["p"]
+c1 = SECP256K1["a"]
+c0 = SECP256K1["b"]
+G = SECP256K1["G"]
+n = SECP256K1["n"]
+h = SECP256K1["h"]
+curve = EllipticCurve(p,c1,c0)
+a = generate_elliptic_private_key(n)
+b = generate_elliptic_private_key(n)
+
+print(f"Primo Base (p): {p}\n")
+print(f"Coeficiente del término lineal: {c1}\n")
+print(f"Coeficiente del término constante: {c0}\n")
+print(f"Generador (G): {G}\n")
+print(f"Orden del Generador (n): {n}\n")
+print(f"Llave privada de Alicia (a): {a}\n")
+print(f"Llave privada de Beto (b): {b}")
+```
+
+Generamos ahora las llaves públicas de Alicia y Beto:
+
+```{python}
+A = curve.multiplication(a,G)
+B = curve.multiplication(b,G)
+
+print(f"Llave pública de Alicia (A): {A}\n")
+print(f"Llave pública de Beto (B): {B}")
+```
+
+Finalmente, generamos las llaves compartidas
+
+```{python}
+S_a = curve.multiplication(a,B)
+S_b = curve.multiplication(b,A)
+
+print(f"Llave compartida generada por Alicia: {S_a}\n")
+print(f"Llave compartida generada por Beto: {S_b}\n")
+```
+
+Como podemos observar, ambas llaves son iguales, lo cual ilustra la correción del protocolo.

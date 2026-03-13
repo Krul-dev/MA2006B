@@ -23,7 +23,8 @@ def decode(encoded_sentence):
 def sha256_of_integer(n):
     length = (n.bit_length() + 7) // 8
     data = n.to_bytes(length, "little")
-    return sha256(data).hexdigest()
+    digest = sha256(data).digest()
+    return int.from_bytes(digest, "big")
 
 def sha256_of_sentence(sentence):
     return sha256_of_integer(encode(sentence))

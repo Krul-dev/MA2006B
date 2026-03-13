@@ -36,7 +36,7 @@ for i, point in enumerate(E_p, start=1):
 
 Consideramos ahora dos puntos sobre la curva: $$
 P = (95, 9) \qquad \text{y} \qquad Q = (79,28)
-$$ Calculamos ahora:
+$$Y realizamos los siguientes cálculos:
 
 ```{python}
 P = (95, 9)

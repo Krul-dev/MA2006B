@@ -1,0 +1,138 @@
+# Protocolo de Firmas Digitales usando Curvas Elípticas (ECDSA)
+
+En este notebook, mostraremos el proceso para generar las llaves pública y privada, así como el proceso para generar una firma digital y su verificación correspondiente usando el protocolo ECDSA. Empezaremos por cargar las funciones que necesitamos:
+
+```{python}
+from cryptocalc import (
+    EllipticCurve,
+    SECP256K1,
+    generate_elliptic_private_key,
+    sha256_of_sentence,
+    gcd,
+    divide_mod,
+)
+```
+
+Para este ejemplo, nuestra curva elíptica $E$ corresponderá a la curva `secp256k1` la cual se encuentra especificada en el documento [SEC 2: Recommended Elliptic Curve Domain Parameters.](https://www.secg.org/sec2-v2.pdf)
+
+```{python}
+p = SECP256K1["p"]
+c1 = SECP256K1["a"]
+c0 = SECP256K1["b"]
+G = SECP256K1["G"]
+n = SECP256K1["n"]
+h = SECP256K1["h"]
+E = EllipticCurve(p,c1,c0)
+
+print(f"Primo Base (p): {p}\n")
+print(f"Coeficiente del término lineal: {c1}\n")
+print(f"Coeficiente del término constante: {c0}\n")
+print(f"Generador (G): {G}\n")
+print(f"Orden del Generador (n): {n}\n")
+```
+
+Generamos ahora la llave privada de Alicia de manera aleatoria.
+
+```{python}
+d = generate_elliptic_private_key(n)
+
+print(f"Llave privada de Alicia (d): {d}\n")
+```
+
+La llave pública de Alicia estará dada por $Q =d G \in E(\mathbb{F}_{p})$
+
+```{python}
+Q = E.multiplication(d,G)
+
+print(f"Llave pública de Alicia (Q): {Q}\n")
+```
+
+Para ilustrar el algoritmo de generación de firmas digitales, supongamos que Alicia desea firmar el siguiente mensaje llano $m$:
+
+```{python}
+m = "Hello World!"
+h = sha256_of_sentence(m)
+
+print(f"Mensaje llano (m): {m}\n")
+print(f"Hash del mensaje llano (h): {h}\n")
+```
+
+Ahora generamos un número aleatorio $1 < k < n$ tal que $\operatorname{mcd}(n,k) = 1$.
+
+```{python}
+while True:
+    k = generate_elliptic_private_key(n)
+    if gcd(n, k) == 1:
+        break
+```
+
+A continuación, calculamos el punto sobre la curva eliptica $R = kG\in E(\mathbb{F}_{p})$ y definimos $r = R_{1}$ , es decir, la primera coordenada del punto $R$.
+
+```{python}
+R = E.multiplication(k, G)
+r = R[0]
+```
+
+Calculamos ahora el valor $$
+s = \frac{h + dr}{k} \mod n
+$$ Si $\operatorname{mcd}(n,s) \neq 1$, Alicia debe elegir un nuevo valor de $k$ y repetir este proceso.
+
+```{python}
+s = divide_mod((h + d*r, n), (k, n))[0]
+
+print(f"El máximo común divisor de n y s es:", gcd(n,s))
+```
+
+Con esta información, podemos ahora generar el *mensaje firmado* $$
+\text{mensaje_firmado} = (m,r,s)
+$$
+
+```{python}
+mensaje_firmado = (m, r, s)
+
+print(f"El mensaje firmado es: {mensaje_firmado}\n")
+```
+
+Procederemos ahora a verificar la firma de este mensaje. Para empezar, Beto debe calcular el hash del mensaje firmado.
+
+```{python}
+h = sha256_of_sentence(mensaje_firmado[0])
+
+print(f"Hash del mensaje firmado (h): {h}\n")
+```
+
+Notamos que este es el mismo hash que el obtenido anteriormente. Calculamos ahora las constantes $$
+\begin{aligned}
+w & =  s^{-1} \mod n \\
+u_{1} & =  hw \mod n \\
+u_{2} & =  rw \mod n \\
+P & =  u_{1}G + u_{2}Q \in E(\mathbb{F}_{p})
+\end{aligned}
+$$ Si $P = \infty,$ entonces la firma es automáticamente inválida.
+
+```{python}
+r = mensaje_firmado[1]
+s = mensaje_firmado[2]
+
+w = divide_mod((1, n), (s, n))[0]
+u1 = (h*w) % n
+u2 = (r*w) % n
+P = E.addition(E.multiplication(u1, G), E.multiplication(u2, Q))
+
+print(f"El valor del punto P es: {P}")
+```
+
+Definimos ahora $p = P_{1}$, es decir, la primera coordenada del punto $P$. Si $p = r$, entonces la firma es válida. En caso contrario, la firma es inválida.
+
+```{python}
+p = P[0]
+
+if p == r:
+    verificacion_firma = "la firma es válida"
+else:
+    verificacion_firma = "la firma es inválida"
+
+print(f"El valor de r es: {r}\n")
+print(f"El valor de p es: {p}\n")
+print("Por lo tanto,", verificacion_firma)
+```

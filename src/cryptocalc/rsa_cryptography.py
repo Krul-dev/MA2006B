@@ -22,22 +22,22 @@ def rsa_key_generation(lenght_of_prime_numbers):
     while gcd(e, phi) != 1:
         e = randint(2, phi-2)
     d = fast_extended_gcd(phi, e)[1] % phi
-    public_key = (n, e)
+    public_key = (e, n)
     private_key = d
     key_ring = (public_key, private_key)
     return key_ring
 
 
 def rsa_encryption(public_key, plain_message):
-    n = public_key[0]
-    e = public_key[1]
+    e = public_key[0]
+    n = public_key[1]
     m = plain_message
     encrypted_message = pow(m, e, n)
     return encrypted_message
 
 
 def rsa_decryption(public_key, private_key, encrypted_message):
-    n = public_key[0]
+    n = public_key[1]
     c = encrypted_message
     d = private_key
     decrypted_message = pow(c, d, n)

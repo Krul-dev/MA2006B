@@ -1315,16 +1315,16 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "cryptography" },
-    { name = "ipykernel", specifier = ">=7.1.0" },
+    { name = "ipykernel" },
     { name = "ipython" },
-    { name = "jupyter", specifier = ">=1.1.1" },
+    { name = "jupyter" },
     { name = "matplotlib" },
     { name = "numpy" },
     { name = "pycryptodome" },
     { name = "pyyaml" },
     { name = "pyzmq" },
     { name = "scipy" },
-    { name = "sympy", specifier = ">=1.14.0" },
+    { name = "sympy" },
     { name = "tornado" },
     { name = "traitlets" },
 ]

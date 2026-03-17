@@ -22,9 +22,9 @@ dependencies = [
   "tornado",
   "traitlets",
   "pyyaml",
-  "jupyter>=1.1.1",
-  "ipykernel>=7.1.0",
-  "sympy>=1.14.0",
+  "jupyter",
+  "ipykernel",
+  "sympy",
 ]
 
 [project.scripts]

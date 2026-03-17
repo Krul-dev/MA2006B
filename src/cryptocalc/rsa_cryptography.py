@@ -25,7 +25,7 @@ def rsa_key_generation(lenght_of_prime_numbers):
     q = number.getPrime(lenght_of_prime_numbers)
     n = p*q
     phi = (p-1)*(q-1)
-    e = randint(2, phi-2)
+    e = 65537
     while gcd(e, phi) != 1:
         e = randint(2, phi-2)
     d = fast_extended_gcd(phi, e)[1] % phi

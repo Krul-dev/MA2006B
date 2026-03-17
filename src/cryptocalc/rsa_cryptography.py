@@ -25,12 +25,12 @@ def rsa_key_generation(lenght_of_prime_numbers):
     q = number.getPrime(lenght_of_prime_numbers)
     n = p*q
     phi = (p-1)*(q-1)
-    e = 65537
+    e = 65537 % phi
     while gcd(e, phi) != 1:
         e = randint(2, phi-2)
     d = fast_extended_gcd(phi, e)[1] % phi
     public_key = (e, n)
-    private_key = d
+    private_key = (d, n)
     key_ring = (public_key, private_key)
     return key_ring
 
@@ -53,7 +53,7 @@ def rsa_encryption(public_key, plain_message):
 
 
 # RSA decryption function
-def rsa_decryption(public_key, private_key, encrypted_message):
+def rsa_decryption(private_key, encrypted_message):
     """
     Decrypt an encrypted message using the RSA decryption algorithm.
     Parameters:
@@ -63,9 +63,9 @@ def rsa_decryption(public_key, private_key, encrypted_message):
     Returns:
         int: The decrypted message, represented as an integer.
     """
-    n = public_key[1]
+    d = private_key[0]
+    n = private_key[1]
     c = encrypted_message
-    d = private_key
     decrypted_message = pow(c, d, n)
     return decrypted_message
 

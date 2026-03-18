@@ -23,6 +23,9 @@ def rsa_key_generation(lenght_of_prime_numbers):
     """
     p = number.getPrime(lenght_of_prime_numbers)
     q = number.getPrime(lenght_of_prime_numbers)
+    while p == q:
+        q = number.getPrime(lenght_of_prime_numbers)
+
     n = p*q
     phi = (p-1)*(q-1)
     e = 65537 % phi

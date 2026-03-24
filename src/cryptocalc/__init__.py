@@ -11,6 +11,7 @@ __version__ = _version("MA2006B")
 from cryptocalc.euclid_algorithm import (
     gcd,
     extended_gcd,
+    fast_extended_gcd,
 )
 
 from cryptocalc.modular_arithmetic import (
@@ -71,6 +72,7 @@ from cryptocalc.elgamal import (
 __all__ = [
     "gcd",
     "extended_gcd",
+    "fast_extended_gcd",
     "simplify_mod",
     "add_mod",
     "substract_mod",

@@ -19,7 +19,7 @@ def rsa_key_generation(lenght_of_prime_numbers):
     Parameters:
         lenght_of_prime_numbers (int): The bit length of the prime numbers to be generated.
     Returns:
-        tuple: A tuple containing the public key (e, n) and the private key d.
+        tuple: A tuple containing the public key (e, n) and the private key (d,n).
     """
     p = number.getPrime(lenght_of_prime_numbers)
     q = number.getPrime(lenght_of_prime_numbers)
@@ -91,7 +91,7 @@ def rsa_text_encryption(public_key, plain_text_message):
 
 # RSA text decryption function
 # This function takes an encrypted message, decrypts it using the RSA decryption algorithm, and then decodes the resulting integer back into a plain text message.
-def rsa_text_decryption(public_key, private_key, encrypted_message):
+def rsa_text_decryption(private_key, encrypted_message):
     """
     Decrypt an encrypted message using the RSA decryption algorithm and decode it back to plain text.
     Parameters:
@@ -101,7 +101,6 @@ def rsa_text_decryption(public_key, private_key, encrypted_message):
     Returns:
         str: The decrypted plain text message.
     """
-    decrypted_message = rsa_decryption(
-        public_key, private_key, encrypted_message)
+    decrypted_message = rsa_decryption(private_key, encrypted_message)
     decrypted_text_message = decode(decrypted_message)
     return decrypted_text_message

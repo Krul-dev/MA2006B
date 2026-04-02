@@ -100,3 +100,5 @@ end = time.perf_counter()
 
 print(f"Elapsed time: {end - start:.6f} seconds")
 ```
+
+Aquí ya podemos notar un efecto mucho más significativo. Queda claro que si tomamos potencias mucho mayores el cálculo por exponenciación ingenua se vuelve rápidamente imposible de realizar en un tiempo razonable.

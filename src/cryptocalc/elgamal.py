@@ -59,14 +59,14 @@ def elgamal_key_generation(safe_prime, primitive_root):
     primitive_root (int): Generator g.
 
     Returns:
-    tuple: ((p, g, y), x) where y = g^x mod p.
+    tuple: ((g, y, p), (g,x,p)) where y = g^x mod p.
     """
     p = safe_prime
     g = primitive_root
     x = _uniform_random_in_range(2, p - 2)
     y = elgamal_public_value_generator(p, g, x)
-    public_key = (p, g, y)
-    private_key = x
+    public_key = (g, y, p)
+    private_key = (g, x, p)
     key_ring = (public_key, private_key)
     return key_ring
 
@@ -82,9 +82,9 @@ def elgamal_encryption(public_key, plain_message):
     Returns:
     tuple: Ciphertext (c1, c2).
     """
-    p = public_key[0]
-    g = public_key[1]
-    y = public_key[2]
+    g = public_key[0]
+    y = public_key[1]
+    p = public_key[2]
     m = plain_message
 
     if not 0 <= m < p:
@@ -98,7 +98,7 @@ def elgamal_encryption(public_key, plain_message):
     return encrypted_message
 
 
-def elgamal_decryption(public_key, private_key, encrypted_message):
+def elgamal_decryption(private_key, encrypted_message):
     """
     Decrypt an ElGamal ciphertext.
 
@@ -110,8 +110,8 @@ def elgamal_decryption(public_key, private_key, encrypted_message):
     Returns:
     int: Decrypted integer message.
     """
-    p = public_key[0]
-    x = private_key
+    p = private_key[2]
+    x = private_key[1]
     c1 = encrypted_message[0]
     c2 = encrypted_message[1]
 

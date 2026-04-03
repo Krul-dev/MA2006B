@@ -64,7 +64,7 @@ from cryptocalc.encoding import (
 )
 
 from cryptocalc.elgamal import (
-    elgamal_public_key_generator,
+    elgamal_public_value_generator,
     elgamal_key_generation,
     elgamal_encryption,
     elgamal_decryption
@@ -100,7 +100,7 @@ __all__ = [
     "decode",
     "sha256_of_integer",
     "sha256_of_sentence",
-    "elgamal_public_key_generator",
+    "elgamal_public_value_generator",
     "elgamal_key_generation",
     "elgamal_encryption",
     "elgamal_decryption",

@@ -25,5 +25,7 @@ format:
 jupyter: python3
 ---
 
+{{< include binary_exponentiation.qmd >}}
 {{< include RSA_encryption_protocol.qmd >}}
+{{< include RSA_digital_signature_protocol.qmd >}}
 {{< include Diffie-Hellman_protocol.qmd >}}

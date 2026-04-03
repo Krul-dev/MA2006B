@@ -1,0 +1,66 @@
+# Sistema RSA para firmas digitales
+
+En este notebook, mostraremos el proceso para generar las claves pública y privada, así como el proceso para generar una firma digital y su verificación correspondiente usando el sistema RSA. Empezaremos por cargar las funciones que necesitamos:
+
+```{python}
+from cryptocalc import (
+    rsa_key_generation,
+    rsa_signature_generation,
+    is_valid_rsa_signature,
+    sha256_of_sentence,
+   )
+```
+
+## Protocolo RSA para la generación de claves
+
+Una vez que ya hemos cargado las librerías necesarias, empezamos por generar nuestras claves *pública* y *privada:*
+
+```{python}
+(public_key, private_key) = rsa_key_generation(2048)
+d = private_key[0]
+e = public_key[0]
+n = public_key[1]
+
+print(f"Exponente público (e): {e}\n")
+print(f"Exponente privado (d): {d}\n")
+print(f"Módulo para las claves (n): {n}\n")
+```
+
+Notemos que para la generación de estas claves utilizamos números primos generados de manera aleatoria de alrededor de 2048 bits de longitud. Se sigue que el módulo generado $n$ tiene alrededor de 4096 bits de longitud. Es muy importante que el valor del exponente privado $d$ no se divulge. En cambio, el exponente público $e$ y el módulo $n$ forman parte de la clave pública y son conocidos por todos los agentes involucrados, incluída Eva.
+
+## Protocolo RSA para la firma de mensajes
+
+Para ilustrar el protocolo para la generación de firmas digitales, supongamos que Alicia desea firmar el mensaje 'Hello World!'. Empezaremos por generar el hash correspondiente:
+
+```{python}
+m = 'Hello World!'
+h = sha256_of_sentence(m)
+
+print(f"Mensaje llano (m): {m}\n")
+print(f"Hash del mensaje llano (h): {h}\n")
+```
+
+Con esta información, podemos generar ahora la firma correspondiente y agregarla al mensaje llano para generar el *mensaje firmado:*
+
+```{python}
+s = rsa_signature_generation(private_key, h)
+signed_message = (m, s)
+
+print(f"El mensaje firmado es: {signed_message}\n")
+```
+
+## Protocolo RSA para la verificación de firmas
+
+Para verificar la firma, Beto aplica el protocolo RSA utilizando la clave pública de Alicia, el hash del mensaje y la firma correspondiente:
+
+```{python}
+h = sha256_of_sentence(signed_message[0])
+s = signed_message[1]
+
+if is_valid_rsa_signature(public_key,h,s):
+    verificacion_firma = "La firma es válida"
+else:
+    verificacion_firma = "La firma es inválida"
+
+print(verificacion_firma)
+```

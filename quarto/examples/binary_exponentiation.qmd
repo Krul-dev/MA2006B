@@ -16,7 +16,8 @@ Ahora fijaremos un número primo que utilizaremos como módulo y un valor base.
 p = RFC_3526_SAFE_PRIME
 g = 2
 x = (g, p)
-x
+print(f"Módulo primo elegido (p): {p}\n")
+print(f"Valor base elegido elegido (g): {g}\n")
 ```
 
 Para comparar los dos algoritmos, mediremos el tiempo que llevar elevar el punto base a la potencia $n = 100$ usando ambos métodos. Con exponenciación binaria:

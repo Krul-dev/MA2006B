@@ -8,7 +8,6 @@ Created on Tue May 15 07:45:58 2018
 
 from cryptocalc.euclid_algorithm import gcd, fast_extended_gcd
 from cryptocalc.encoding import encode, decode
-from random import randint
 
 from Crypto.Util import number
 
@@ -21,16 +20,19 @@ def rsa_key_generation(lenght_of_prime_numbers):
     Returns:
         tuple: A tuple containing the public key (e, n) and the private key (d,n).
     """
-    p = number.getPrime(lenght_of_prime_numbers)
-    q = number.getPrime(lenght_of_prime_numbers)
-    while p == q:
-        q = number.getPrime(lenght_of_prime_numbers)
+    e = 65537
+    while True:
+       p = number.getPrime(lenght_of_prime_numbers)
+       q = number.getPrime(lenght_of_prime_numbers)
+       while p == q:
+          q = number.getPrime(lenght_of_prime_numbers)
 
-    n = p*q
-    phi = (p-1)*(q-1)
-    e = 65537 % phi
-    while gcd(e, phi) != 1:
-        e = randint(2, phi-2)
+       n = p*q
+       phi = (p-1)*(q-1)
+       if gcd(e, phi) == 1:
+            break
+
+    e = e % phi
     d = fast_extended_gcd(phi, e)[1] % phi
     public_key = (e, n)
     private_key = (d, n)

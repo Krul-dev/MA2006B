@@ -31,7 +31,7 @@ def _uniform_random_in_range(lower_bound, upper_bound):
     width = upper_bound - lower_bound + 1
     return lower_bound + _uniform_random_below(width)
 
-def elgamal_public_key_generator(safe_prime, primitive_root, private_key):
+def elgamal_public_value_generator(safe_prime, primitive_root, private_key):
     """
     Generate a public key using ElGamal over Z/pZ.
 
@@ -64,7 +64,7 @@ def elgamal_key_generation(safe_prime, primitive_root):
     p = safe_prime
     g = primitive_root
     x = _uniform_random_in_range(2, p - 2)
-    y = elgamal_public_key_generator(p, g, x)
+    y = elgamal_public_value_generator(p, g, x)
     public_key = (p, g, y)
     private_key = x
     key_ring = (public_key, private_key)

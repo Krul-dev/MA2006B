@@ -1,6 +1,6 @@
-# Protocolo Diffie-Hellman para la generación de una llave compartida
+# Protocolo Diffie-Hellman para la generación de una clave compartida
 
-En este notebook, mostraremos el proceso de generar una llave compartida utilizando el protocolo Diffie-Hellman. Empezaremos por cargar las funciones que necesitamos:
+En este notebook, mostraremos el proceso de generar una clave compartida utilizando el protocolo Diffie-Hellman. Empezaremos por cargar las funciones que necesitamos:
 
 ```{python}
 from cryptocalc import (
@@ -12,7 +12,7 @@ from cryptocalc import (
   )
 ```
 
-Para este ejemplo, utilizaremos uno de los primos seguros listados en la especificación [RFC 3526](https://www.ietf.org/rfc/rfc3526.txt) y generaremos las llaves secretas de Alicia y Beto de manera aleatoria:
+Para este ejemplo, utilizaremos uno de los primos seguros listados en la especificación [RFC 3526](https://www.ietf.org/rfc/rfc3526.txt) y generaremos las claves secretas de Alicia y Beto de manera aleatoria:
 
 ```{python}
 p = RFC_3526_SAFE_PRIME
@@ -24,28 +24,28 @@ b = generate_private_key(q)
 print(f"Primo Seguro (p): {p}\n")
 print(f"Primo de Sophie Germain (q): {q}\n")
 print(f"Generador (g): {g}\n")
-print(f"Llave privada de Alicia (a): {a}\n")
-print(f"Llave privada de Beto (b): {b}")
+print(f"Clave privada de Alicia (a): {a}\n")
+print(f"Clave privada de Beto (b): {b}")
 ```
 
-Generamos ahora las llaves públicas de Alicia y Beto:
+Generamos ahora las claves públicas de Alicia y Beto:
 
 ```{python}
 A = diffie_hellman_public_key_generator(p, g, a)
 B = diffie_hellman_public_key_generator(p, g, b)
 
-print(f"Llave pública de Alicia (A): {A}\n")
-print(f"Llave pública de Beto (B): {B}")
+print(f"Clave pública de Alicia (A): {A}\n")
+print(f"Clave pública de Beto (B): {B}")
 ```
 
-Finalmente, generamos las llaves compartidas
+Finalmente, generamos las claves compartidas
 
 ```{python}
 s_a = diffie_hellman_shared_key_generator(p, B, a)
 s_b = diffie_hellman_shared_key_generator(p, A, b)
 
-print(f"Llave compartida generada por Alicia (s_a): {s_a}\n")
-print(f"Llave compartida generada por Beto (s_b): {s_b}\n")
+print(f"Clave compartida generada por Alicia (s_a): {s_a}\n")
+print(f"Clave compartida generada por Beto (s_b): {s_b}\n")
 ```
 
-Como podemos observar, ambas llaves son iguales, lo cual ilustra la correción del protocolo.
+Como podemos observar, ambas claves son iguales, lo cual ilustra la correción del protocolo.

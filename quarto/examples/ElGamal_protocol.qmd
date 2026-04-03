@@ -1,6 +1,6 @@
-# Protocolo de Encriptación ElGamal
+# Sistema de Encriptación ElGamal
 
-En este notebook, mostraremos el proceso de encriptación usando el protocolo ElGamal. Empezaremos por cargar las funciones que necesitamos:
+En este notebook, mostraremos el sistema de encriptación usando el protocolo ElGamal. Empezaremos por cargar las funciones que necesitamos:
 
 ```{python}
 from cryptocalc import (
@@ -14,60 +14,67 @@ from cryptocalc import (
 )
 ```
 
-Para generar las llaves pública y privada, utilizaremos uno de los primos seguros listados en la especificación [RFC 3526](https://www.ietf.org/rfc/rfc3526.txt) y utilizamos el algoritmo correspondiente:
+## Protocolo ElGamal para la generación de claves
+
+Para generar las claves pública y privada, utilizaremos uno de los primos seguros listados en la especificación [RFC 3526](https://www.ietf.org/rfc/rfc3526.txt) y utilizamos el algoritmo correspondiente:
 
 ```{python}
 p = RFC_3526_SAFE_PRIME
 q = RFC_3526_SOPHIE_PRIME
 g = 2
 (public_key, private_key) = elgamal_key_generation(p, g)
-x = private_key
-y = public_key[2]
+x = private_key[1]
+y = public_key[1]
 
 print(f"Primo Seguro (p): {p}\n")
 print(f"Primo de Sophie Germain (q): {q}\n")
 print(f"Generador (g): {g}\n")
-print(f"Llave privada (x): {x}\n")
-print(f"Llave pública (y): {y}")
+print(f"Valor privado (x): {x}\n")
+print(f"Valor público (y): {y}")
 ```
 
-Para demostrar como funciona este proceso, procedemos ahora a generar un mensaje que deseamos encriptar. Empezaremos con el simple 'Hello World!'
+## Protocolo ElGamal para el cifrado de mensajes
+
+Para ilustrar como funciona el protocolo ElGamal para el cifrado de mensajes, generaremos un mensaje que deseamos encriptar. Empezaremos con el simple 'Hello World!':
 
 ```{python}
 plain_text = 'Hello World!'
+print(f"Texto llano: {plain_text}\n")
 ```
 
 Antes de poder encriptar este mensaje, necesitamos codificarlo en forma numérica:
 
 ```{python}
 plain_message = encode(plain_text)
-plain_message
+print(f"Mensaje llano: {plain_message}\n")
 ```
 
-Utilizando la llave pública, podemos ahora generar el *mensaje encriptado*
+Utilizando la clave pública, podemos ahora generar el *mensaje cifrado:*
 
 ```{python}
 encrypted_message = elgamal_encryption(public_key, plain_message)
-encrypted_message
+print(f"Mensaje cifrado: {encrypted_message}\n")
 ```
 
 Si este mensaje fuera interceptado por un adversario (digamos Eva) este sería el mensaje de texto que obtendría:
 
 ```{python}
 encrypted_text = decode(encrypted_message[1])
-encrypted_text
+print(f"Texto cifrado: {encrypted_text}\n")
 ```
 
-Por otro lado, Alicia al momento de recibir este mensaje podría desencriptarlo primero utilizando su llave privada:
+## Protocolo ElGamal para el descifrado de mensajes
+
+Para poder descifrar el mensaje recibido, Alicia puede utilizar el protocolo ElGamal con su clave privada:
 
 ```{python}
-decrypted_message = elgamal_decryption(public_key,private_key, encrypted_message)
-decrypted_message
+decrypted_message = elgamal_decryption(private_key, encrypted_message)
+print(f"Mensaje descifrado: {decrypted_message}\n")
 ```
 
 Para poder leer este mensaje basta con decodificarlo a mensaje de texto:
 
 ```{python}
 decrypted_text = decode(decrypted_message)
-decrypted_text
+print(f"Texto descifrado: {decrypted_text}\n")
 ```

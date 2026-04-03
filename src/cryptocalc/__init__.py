@@ -52,6 +52,8 @@ from cryptocalc.rsa_cryptography import (
     rsa_decryption,
     rsa_text_encryption,
     rsa_text_decryption,
+    rsa_signature_generation,
+    is_valid_rsa_signature,
 )
 
 from cryptocalc.encoding import (
@@ -92,6 +94,8 @@ __all__ = [
     "rsa_decryption",
     "rsa_text_encryption",
     "rsa_text_decryption",
+    "rsa_signature_generation",
+    "is_valid_rsa_signature",
     "encode",
     "decode",
     "sha256_of_integer",

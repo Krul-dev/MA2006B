@@ -76,7 +76,6 @@ def rsa_decryption(private_key, encrypted_message):
 
 
 # RSA text encryption function
-# This function takes a plain text message, encodes it into an integer, and then encrypts it using the RSA encryption algorithm.
 def rsa_text_encryption(public_key, plain_text_message):
     """
     Encrypt a plain text message using the RSA encryption algorithm.
@@ -92,7 +91,6 @@ def rsa_text_encryption(public_key, plain_text_message):
 
 
 # RSA text decryption function
-# This function takes an encrypted message, decrypts it using the RSA decryption algorithm, and then decodes the resulting integer back into a plain text message.
 def rsa_text_decryption(private_key, encrypted_message):
     """
     Decrypt an encrypted message using the RSA decryption algorithm and decode it back to plain text.
@@ -106,3 +104,32 @@ def rsa_text_decryption(private_key, encrypted_message):
     decrypted_message = rsa_decryption(private_key, encrypted_message)
     decrypted_text_message = decode(decrypted_message)
     return decrypted_text_message
+
+# RSA digital signature generation function 
+def rsa_signature_generation(private_key, hash_of_message):
+    """
+    Generate a digital signature for a given message using the RSA algorithm.
+    Parameters:
+        private_key (tuple): The RSA private key (d, n) used for signing.
+        message (str): The message to be signed.
+    Returns:
+        int: The generated digital signature, represented as an integer.
+    """
+    signature = rsa_decryption(private_key, hash_of_message)
+    return signature
+
+# RSA signature verification function 
+def is_valid_rsa_signature(public_key, hash_of_message, signature):
+    """
+    Verify the validity of a digital signature using the RSA algorithm.
+    Parameters:
+        public_key (tuple): The RSA public key (e, n) used for verification.
+        signature (int): The digital signature to be verified, represented as an integer.
+        message (str): The original message that was signed.
+    Returns:
+        bool: True if the signature is valid, False otherwise.
+    """
+    e = public_key[0]
+    n = public_key[1]
+    encrypted_signature = pow(signature, e, n)
+    return encrypted_signature == hash_of_message

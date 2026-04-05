@@ -1,0 +1,25 @@
+---
+title: |
+  Instrucciones de instalación para el 
+
+  paquete de apoyo para la materia MA2006B 
+format:
+  pdf:
+    fontsize: 11pt
+    pdf-engine: pdflatex
+    number-sections: false
+    include-in-header:
+        - text: |
+            \usepackage[table]{xcolor}
+            \usepackage{float}
+
+jupyter: python3
+
+highlight-style: tango 
+
+
+execute:
+    echo: true  # Set to false if you don't want code displayed
+---
+
+{{< include _section1.qmd >}}

@@ -1,0 +1,80 @@
+En estas notas describiremos como instalar el paquete "MA2006B" en un entorno de Python virtual en modo editable. Este paquete incluye una serie de funciones y clases que permiten implementar protocolos criptográficos básicos.
+
+
+# Instrucciones de instalación 
+
+1. Crea un directorio (folder) que contendrá el paquete "MA2006B" y abre una terminal en este directorio.
+2. Copia el paquete "MA2006B" dentro de el directorio que creaste en el paso anterior. Para esto disponemos de un par de opciones:
+- **Usando github:** Escribe el siguiente comando en tu terminal:
+```{python}
+#| engine: zsh
+#| eval: false 
+
+git clone https://github.com/Krul-dev/MA2006B.git 
+```
+- **Descarga directa:** Descarga el archivo [MA2006B.zip](https://github.com/Krul-dev/MA2006B/raw/trunk/dist_zip/MA2006B.zip) y descomprímelo en el directorio que creaste en el primer paso.
+
+3. Cambia al directorio del paquete "MA2006B" con el siguiente comando:
+```{python}
+#| engine: zsh
+#| eval: false
+
+cd MA2006B
+```
+4. Crea un entorno virtual de Python:
+
+```{python}
+#| engine: zsh
+#| eval: false
+
+python -m venv venv
+```
+5. Activa el entorno virtual que acabamos de crear:
+- **En Windows:**
+```{python}
+#| engine: zsh
+#| eval: false
+
+venv\Scripts\activate
+```
+- **En MacOS y Linux:** 
+
+```{python}
+#| engine: zsh
+#| eval: false
+
+source venv/bin/activate
+```
+
+6. Actualiza pip a la última versión (recomendado): 
+```{python}
+#| engine: zsh
+#| eval: false
+
+pip install --upgrade pip 
+```
+
+7. Instala el paquete "MA2006B" en modo editable:
+```{python}
+#| engine: zsh
+#| eval: false
+
+pip install -e .
+```
+
+8. Puedes verificar que el paquete se instaló correctamente corriendo la siguiente aplición:
+```{python}
+#| engine: zsh
+#| eval: false
+
+ecc_test
+```
+9. Para desactivar el entorno virtual, ejecuta el siguiente comando:
+```{python}
+#| engine: zsh
+#| eval: false
+deactivate
+```
+10. Para volver a activar el entorno virtual, navega hasta la carpeta donde se encuentra el entorno y ejecuta el comando de activación nuevamente.
+
+

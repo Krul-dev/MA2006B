@@ -1,0 +1,373 @@
+# Teoría de anillos y campos aplicada a la criptografía
+
+En esta sección presentaremos los resultados básicos de la teoría de anillos y campos que serán necesarios para el desarrollo de los temas relacionados con la criptografía. 
+
+## Definiciones y propiedades básicas 
+
+\begin{definition}
+Un \emph{anillo} es un conjunto $A$ junto con dos operaciones binarias, 
+\begin{alignat*}{2}
+\text{Suma}: \;& A\times A &&\longrightarrow A \\
+              & (a_{1},a_{2}) &&\mapsto a_{1}+a_{2} \\
+\text{Mult}: \;& A\times A &&\longrightarrow A \\
+              & (a_{1},a_{2}) &&\mapsto a_{1}\cdot a_{2}
+\end{alignat*}
+junto con una operación unaria,
+\begin{alignat*}{2} 
+\text{Inv}: \;& A &&\longrightarrow A \\
+              & a &&\mapsto -a \\
+\end{alignat*}
+y elementos especiales $0,$ $1\in A$ que satisfacen las siguientes propiedades:
+\begin{enumerate} 
+\item \textbf{Asociatividad de la suma:} Dados $a_{1},$ $a_{2},$ $a_{3}\in A,$ se cumple que 
+$$
+(a_{1}+a_{2})+a_{3}=a_{1}+(a_{2}+a_{3}).
+$$
+\item \textbf{Elemento neutro de la suma:} Dado $a\in A,$ se cumple que 
+$$
+a+0 = 0+a=a.
+$$ 
+\item \textbf{Inverso aditivo:} Dado $a\in A,$ se cumple que 
+$$
+a+(-a)=-a+a=0.
+$$
+\item \textbf{Conmutatividad de la suma:} Dados $a_{1},$ $a_{2}\in A,$ se cumple que 
+$$
+a_{1}+a_{2}=a_{2}+a_{1}.
+$$
+\item \textbf{Asociatividad de la multiplicación:} Dados $a_{1},$ $a_{2},$ $a_{3}\in A,$ se cumple que 
+$$
+(a_{1}\cdot a_{2})\cdot a_{3}=a_{1}\cdot (a_{2}\cdot a_{3}).
+$$
+\item \textbf{Elemento neutro de la multiplicación:} Dado $a\in A,$ se cumple que 
+$$
+a\cdot 1 = 1\cdot a=a.
+$$
+\item \textbf{Distributividad:} Dados $a_{1},$ $a_{2},$ $a_{3}\in A,$ se cumple que 
+$$
+a_{1}\cdot (a_{2}+a_{3})=a_{1}\cdot a_{2}+a_{1}\cdot a_{3} \qquad \mbox{y} \qquad (a_{1}+a_{2})\cdot a_{3}=a_{1}\cdot a_{3}+a_{2}\cdot a_{3}.
+$$
+Si además tenemos que
+\item \textbf{Conmutatividad de la multiplicación:} Dados $a_{1},$ $a_{2}\in A,$ se cumple que 
+$$
+a_{1}\cdot a_{2}=a_{2}\cdot a_{1},
+$$
+entonces decimos que $A$ es un \emph{anillo conmutativo.} Si además se cumple que 
+\item \textbf{Inversos multiplicativos:} Dado $a\in A,$ si $a\neq 0,$ entonces existe $a^{-1}\in A$ tal que 
+$$
+a\cdot a^{-1}=a^{-1}\cdot a=1,
+$$
+entonces decimos que $A$ es un \emph{campo.}
+\end{enumerate}
+\end{definition}
+
+\begin{example} 
+Algunos ejemplos de anillos y campos son los siguientes: 
+\begin{enumerate}
+\item El conjunto de los enteros $\Z$ con las operaciones usuales de suma y multiplicación es un anillo conmutativo, pero no es un campo.
+\item El conjunto de los números racionales $\Q$ con las operaciones usuales de suma y multiplicación es un campo.
+\item El conjunto de los números reales $\R$ con las operaciones usuales de suma y multiplicación es un campo.
+\item El conjunto de los números complejos $\C$ con las operaciones usuales de suma y multiplicación es un campo.
+\item El conjunto de las matrices de $2\times 2$ con entradas en $\R$ con las operaciones usuales de suma y multiplicación es un anillo que no es conmutativo.
+\item Para todo entero $n > 0$ el conjunto $\Z/n\Z$ con las operaciones de suma y multiplicación definidas anteriormente es un anillo conmutativo.
+\end{enumerate}
+\end{example}
+
+\begin{observation} La ventaja de tener una definición abstracta de anillo y campo es que, una vez que hemos demostrado un resultado para anillos o campos, este resultado se puede aplicar a todos los ejemplos anteriores sin necesidad de volver a demostrarlo para cada caso particular. Por ejemplo, consideremos el siguiente resultado:
+\end{observation} 
+
+\begin{theorem} Sea $A$ un anillo. Entonces, para todo $a\in A,$ se cumple que $a\cdot 0=0\cdot a=0.$
+\end{theorem} 
+
+
+\begin{proof}
+Para demostrar este resultado, notamos que para todo $a\in A,$ 
+\begin{align*} 
+a \cdot (0 + 0 ) & = a \cdot 0 \\
+a\cdot 0 + a \cdot 0 & = a \cdot 0 \\ 
+(a \cdot 0 + a \cdot 0) + (-a \cdot 0) & = a \cdot 0 + (-a \cdot 0) \\ 
+a \cdot 0 + (a \cdot 0 + (-a \cdot 0)) & = 0 \\
+a \cdot 0 + 0 & = 0 \\
+a \cdot 0 & = 0.
+\end{align*}
+De manera similar, se demuestra que $0\cdot a=0.$
+\end{proof}
+
+## El algoritmo de Euclides 
+
+Discutiremos ahora el algoritmo de Euclides, el cual será una herramienta necesaria para el cálculo de inversos multiplicativos en aritmética modular. Pero antes de presentar el algoritmo, necesitaremos introducir algunas definiciones y resultados preliminares.
+
+\begin{definition}
+Supongamos que tenemos dos números enteros $n>m \geq 0.$ Decimos que $d$ es un \emph{máximo común divisor} de $n$ y $m$ si se satisfacen las siguientes condiciones:
+\begin{enumerate}	
+\item $d>0.$
+\item $d|n$ y $d|m.$
+\item Si $t|n$ y $t|m,$ entonces $t|d.$
+\end{enumerate}
+\end{definition}
+
+\begin{example}\label{ej:algoritmo_de_Euclides}
+Consideremos los siguientes ejemplos:
+\begin{enumerate}
+\item Supongamos que
+$$
+n=6=2\cdot 3, \qquad m=4=2^{2}.
+$$
+En este caso, si tomamos $d=2,$ vemos que $d$ es un máximo común divisor de $6$ y $4.$
+
+\item Si 
+$$
+n=36=2^{2}\cdot 3^{2}, \qquad m=24=2^{3}\cdot 3,
+$$
+entonces
+$$
+d=2^{2}\cdot 3=12
+$$
+es un máximo común divisor de $36$ y $24.$
+\end{enumerate}
+\end{example}
+
+\begin{lemma} \label{lema:divisibilidad_y_combinaciones_lineales}
+Supongamos que $t|n$ y $t|m.$ Entonces, para todo $a$ y $b\in \Z,$ se cumple que $t|an+bm.$
+\end{lemma}
+
+\begin{proof}
+Para demostrar este resultado, notemos que, como $t|n,$ existe $k\in \Z$ tal que $n=tk.$ De manera similar, como $t|m,$ existe $l\in \Z$ tal que $m=tl.$ Por lo tanto,
+\begin{align*}
+an+bm & = a(tk)+b(tl) \\
+& = t(ak+bl)
+\end{align*}
+de donde concluimos que $t|an+bm.$
+\end{proof}
+
+Ya con estos resultados a la mano, introduciremos el algoritmo de Euclides extendido y sus propiedades fundamentales.
+
+\begin{theorem}[Algoritmo de Euclides extendido]
+Supongamos que $n>m\geq 0.$ Entonces:
+\begin{enumerate}
+\item Existe $d\in \Z$ tal que $d$ es un máximo común divisor de $n$ y $m.$
+
+\item Existen $a,$ $b\in \Z$ tales que
+$$
+an+bm=d.
+$$
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Para la demostración de este resultado, usaremos la interpretación BHK (Brouwer-Heyting-Kolgomorov) que nos indica que la demostración de un teorema de existencia debe tener la siguiente estructura:
+\begin{enumerate}
+\item Debemos presentar un \emph{algoritmo} que nos permita calcular los número $d,$ $a$ y $b$ a partir del par de enteros $n>m\geq 0.$
+
+\item Debemos demostrar que los números $d,$ $a$ y $b$ obtenidos en el algoritmo anterior satisfacen las propiedades requeridas.
+\end{enumerate}
+
+Empezaremos por indicar un algoritmo para calcular los números $d$, $a$ y $b$ a partir de $n>m\geq 0.$ Para esto definiremos una función recursiva 
+$$
+(a,b,d)=\emcd(n,m)
+$$ 
+de la siguiente manera:
+\begin{enumerate}
+\item Si $m=0,$ definimos
+$$
+(a,b,d)=\emcd(n,m)=(1,0,n).
+$$
+\item Si $m\neq 0,$ entonces, usando el algoritmo de la división, encontramos $q,$ $r,$ con $0\leq r < m$ tales que 
+$$
+n=qm+r.
+$$
+En este caso, definimos
+$$
+(a,b,d)=(\emcd(m,r)_{2},\emcd(m,r)_{1}-q \emcd(m,r)_{2},\emcd(m,r)_{3}),
+$$
+donde $\emcd(m,r)_{1},$ $\emcd(m,r)_{2}$ y $\emcd(m,r)_{3}$ representan la primera, segunda y tercera entrada, respectivamente, de la tripleta asociada a $\emcd(m,r).$
+\end{enumerate}
+
+Antes de continuar con la demostración, ilustraremos el funcionamiento del algoritmo mediante el análisis de algunos casos particulares:
+
+\begin{enumerate}
+
+\item Cuando $n=6,$ $m=4,$ obtenemos:
+\begin{align*}
+\emcd(6,4) & =(1,0-(1)(1),2)=(1,-1,2)  & q_{1} & = 1, & r_{1} & = 2 \\
+\emcd(4,2) & =(0,1-(2)(0),2)=(0,1,2)   & q_{2} & = 2, & r_{2} & = 0  \\
+\emcd(2,0) & =(1,0,2)                  &       & & & 
+\end{align*}
+
+\item Cuando $n=32,$ $m=24,$ obtenemos:
+\begin{align*}
+\emcd(32,24) & =(1,0-(1)(1),8)=(1,-1,8)  & q_{1} & = 1, & r_{1} & = 8 \\
+\emcd(24,8) & =(0,1-(3)(0),8)=(0,1,8)   & q_{2} & = 3, & r_{2} & = 0  \\
+\emcd(8,0) & =(1,0,8)                  &       & & &
+\end{align*}
+
+\item Cuando $n=37,$ $m=14$ obtenemos:
+\begin{align*} 
+\emcd(37,14) & =(-3,2-(2)(-3),1)=(-3,8,1)  & q_{1} & = 2, & r_{1} & = 9 \\
+\emcd(14,9) & =(2,-1-(1)(2),1)=(2,-3,1)   & q_{2} & = 1, & r_{2} & = 5  \\
+\emcd(9,5) & =(-1,1-(1)(-1),1)=(-1,2,1)  & q_{3} & = 1, & r_{3} & = 4  \\
+\emcd(5,4) & =(1,0-(1)(1),1)=(1,-1,1)   & q_{4} & = 1, & r_{4} & = 1  \\
+\emcd(4,1) & =(0,1-(4)(0),1)=(0,1,1)   & q_{5} & = 4, & r_{5} & = 0  \\
+\emcd(1,0) & =(1,0,1)                  &       & & & 
+\end{align*}
+
+\end{enumerate}
+
+Regresemos ahora a la demostración del teorema. Hasta ahora hemos proporcionado un algoritmo para calcular los valores
+$$
+(a, b, d)=\emcd(n,m).
+$$
+De acuerdo con la interpretación BHK, ahora debemos demostrar que estos números satisfacen las condiciones requeridas. Empezaremos por notar que la estructura general del algoritmo es la siguiente:
+$$
+\begin{array}{ccrlcrl}
+\emcd(n,m) & & n\!\!\!&=q_{1}m+r_{1}, & & r_{1}\!\!\!&=n-q_{1}m. \\
+\emcd(m,r_{1}) & & m\!\!\!&=q_{2}r_{1}+r_{2}, & & r_{2}\!\!\!&=m-q_{2}r_{1} \\
+\emcd(r_{1},r_{2}) & & r_{1}\!\!\!&=q_{3}r_{2}+r_{3}, & & r_{3}\!\!\!&=r_{1}-q_{3}r_{2} \\
+ \vdots & & & \,\, \vdots &  & & \, \,\vdots \\
+\emcd(r_{j-1},r_{j}) & & r_{j-1}\!\!\!&=q_{j+1}r_{j}+r_{j+1}, & & r_{j+1}\!\!\!&=r_{j-1}-q_{j+1}r_{j} \\ 
+\emcd(r_{j},r_{j+1}) & & r_{j}\!\!\!&=q_{j+2}r_{j+1}+r_{j+2}, & & r_{j+2}\!\!\!&=r_{j}-q_{j+2}r_{j+1} \\ 
+ \vdots & & & \,\, \vdots &  & & \, \,\vdots \\
+\emcd(r_{k-1},r_{k}) & & r_{k-1}\!\!\!&=q_{k+1}r_{k}+r_{k+1}, & & r_{k+1}\!\!\!&=r_{k-1}-q_{k+1}r_{k}. \\
+\emcd(r_{k},r_{k+1}) & & r_{k}\!\!\!&=q_{k+2}r_{k+1}, & & 0\!\!\!&=r_{k}-q_{k+2}r_{k+1}. \\
+\emcd(r_{k+1},0) & & & & & &
+\end{array}
+$$
+Notemos además que, de acuerdo al algoritmo que describimos al principio de la demostración, el valor de $d$ es precisamente $r_{k+1}.$ Por lo tanto, para demostrar que $d$ es un máximo común divisor de $n$ y $m,$ debemos demostrar que $r_{k+1}$ satisface las propiedades requeridas: 
+\begin{enumerate}
+\item \textbf{d>0.} Notemos que, por la construcción del algoritmo, $r_{j}\geq 0$ para todo $j\in \Z.$ Por otro lado, como $r_{k+1}$ es el último residuo no nulo del algoritmo, se sigue que $d = r_{k+1}>0.$
+
+\item \textbf{$\mathbf{d|n}$ y $\mathbf{d|m.}$} Para demostrar esta propiedad, procederemos por inducción. 
+\begin{description}
+\item[Caso base.] Empezaremos por demostrar que $d|r_{k}$ y $d|r_{k+1}.$ Para esto, notemos primero que como $d= r_{k+1}>0,$ entonces $d|r_{k+1}$ trivialmente. Por otro lado, como $r_{k}=q_{k+2}r_{k+1},$ se sigue que $d|r_{k}.$
+\item[Paso inductivo.] Supongamos que $d|r_{j}$ y $d|r_{j+1}$ para algún $j\in \Z$ con $0\leq j < k.$ Queremos demostrar que, en este caso, $d|r_{j-1}.$ Para esto notamos que, como $r_{j-1}=q_{j+1}r_{j}+r_{j+1},$ entonces, del lema \ref{lema:divisibilidad_y_combinaciones_lineales}, obtenemos que $d|r_{j-1}.$
+\end{description}
+
+\item \textbf{Si $\mathbf{t|n}$ y $\mathbf{t|m}$, entonces $\mathbf{t|d}.$} Esta propiedad también la demostraremos por inducción.
+\begin{description}
+\item[Caso base.] Por hipótesis, $t|n$ y $t|m.$  
+\item[Paso inductivo.] Supongamos que $t|r_{j-1}$ y $t|r_{j}$ para algún $j\in \Z$ con $0\leq j < k.$ Queremos demostrar que, en este caso, $t|r_{j+1}.$ Para esto notamos que, como $r_{j+1}=r_{j-1}-q_{j+1}r_{j},$ entonces, del lema \ref{lema:divisibilidad_y_combinaciones_lineales}, obtenemos que $t|r_{j+1}.$
+\end{description}
+\end{enumerate}
+
+Lo único que nos queda por demostrar es que si $(a,b,d)=\emcd(n,m)$ entonces la identidad
+$d=an+bm$ se satisface. Para demostrar esta identidad también usaremos inducción:
+
+\begin{description}
+\item[Caso base.] Notamos que
+$$
+\emcd(r_{k+1},0)=(1,0,r_{k+1}),
+$$
+y, claramente,
+$$
+d = r_{k+1}= r_{k+1}\cdot 1 +0\cdot 0.
+$$
+
+\item[Paso Inductivo.] Supongamos que
+$$
+\emcd(r_{j},r_{j+1})=(a_{j},b_{j},r_{k+1}),
+$$
+satisface las propiedades requeridas, es decir, supongamos que
+\begin{equation}\label{eq:hipotesis_de_induccion}
+a_{j}r_{j}+b_{j}r_{j+1}=r_{k+1}.
+\end{equation}
+Queremos demostrar que
+$$
+\emcd(r_{j-1},r_{j}) = (a_{j-1}, b_{j-1},r_{k+1}) = (b_{j},a_{j}-q_{j+1}b_{j},r_{k+1}),
+$$
+en otras palabras, queremos demostrar que
+$$
+r_{k+1}=b_{j}r_{j-1}+(a_{j}-q_{j+1}b_{j})r_{j}.
+$$
+Pero, como $r_{j-1}=q_{j+1}r_{j}+r_{j+1},$ tenemos que 
+\begin{align*}
+b_{j}r_{j-1}+(a_{j}-q_{j+1}b_{j})r_{j} & =b_{j}(q_{j+1}r_{j}+r_{j+1})+(a_{j}-q_{j+1}b_{j})r_{j}. \\
+  &= b_{j}q_{j+1}r_{j}+b_{j}r_{j+1}+a_{j}r_{j}-q_{j+1}b_{j}r_{j} \\
+  &= a_{j}r_{j}+b_{j}r_{j+1} \\
+  & = r_{j+1},
+\end{align*}
+donde en el último paso hemos usado la ecuación (\ref{eq:hipotesis_de_induccion}).
+\end{description}
+\end{proof}
+
+## Aritmética y álgebra modular
+
+Como habíamos mencionado anteriormente, el algoritmo de Euclides extendido puede ser utilizado para calcular inversos multiplicativos en aritmética modular. De manera más explícita, supongamos que tenemos enteros $n>m\geq 0$ y supongamos que $mcd(n,m) = 1.$ En este caso, el algoritmo de Euclides extendido nos proporciona enteros $a$ y $b$ tales que 
+$$
+an+bm=1.
+$$
+Se sigue que 
+\begin{align*} 
+an+bm & = 1 \mod n \\
+bm & = 1 \mod n.
+\end{align*}
+En otras palabras, $b$ es un inverso multiplicativo de $m$ en la aritmética módulo $n.$ En particular, si $n$ es un número primo, entonces para todo $m\in \Z$ con $0<m<n,$ se cumple que $mcd(n,m)=1,$ por lo que el algoritmo de Euclides extendido nos permite calcular un inverso multiplicativo de $m$ módulo $n.$ Se sigue que, cuando $n$ es un número primo, el conjunto $\Z/n\Z$ es un campo.
+
+\begin{example} Encuentre el valor de $x$ tal que 
+$$
+3x + 7 = 0 \mod 11.
+$$
+\textbf{Solución.} Para resolver esta ecuación, empezamos por notar que
+\begin{align*}
+3x + 7 & = 0 \mod 11 \\
+3x & = -7 \mod 11 \\
+3x & = 4 \mod 11.
+\end{align*}
+Para continuar, notamos que $mcd(11,3)=1,$ por lo que podemos utilizar el algoritmo de Euclides extendido para encontrar un inverso multiplicativo de $3$ módulo $11.$ Para esto, calculamos
+\begin{align*}
+\emcd(11,3) & =(-1,1-(-1)3,1) = (-1,4,1) & q_{1} & = 3, & r_{1} & = 2 \\ 
+\emcd(3,2) & =(1,0-(1)(1),1) = (1,-1,1) & q_{2} & = 1, & r_{2} & = 1 \\ 
+\emcd(2,1) & =(0,1-(2)(0),1) = (0,1,1) & q_{3} & = 2, & r_{3} & = 0 \\ 
+\emcd(1,0) & =(1,0,1) & & & &
+\end{align*}
+Se sigue que $4$ es el inverso multiplicativo de $3$ módulo $11.$ Por lo tanto, multiplicamos ambos lados de la ecuación por este número para obtener
+\begin{align*}
+3x & = 4 \mod 11 \\
+4\cdot 3x & = 4\cdot 4 \mod 11 \\ 
+12x & = 16 \mod 11 \\ 
+x & = 5 \mod 11.
+\end{align*}
+\end{example}
+
+## Exponenciación binaria 
+
+Supongamos que queremos calcular 
+$$
+a^{k} \mod n
+$$
+para algunos enteros $a,$ $k$ y $n.$ Para esto, podemos usar el algoritmo de exponenciación binaria, el cual se basa en la siguiente idea: si $k$ es un número par, entonces
+$$
+a^{k} = (a^{2})^{\frac{k}{2}}.
+$$
+Si $k$ es un número impar, entonces
+$$
+a^{k} = a\cdot a^{k-1} = a\cdot (a^{2})^{\frac{k-1}{2}}.
+$$
+Este algoritmo es mucho más eficiente que el método tradicional de calcular $a^{k}$ multiplicando $a$ por sí mismo $k$ veces, ya que el número de multiplicaciones necesarias para calcular $a^{k}$ usando el método tradicional es $k-1,$ mientras que el número de multiplicaciones necesarias para calcular $a^{k}$ usando el algoritmo de exponenciación binaria es aproximadamente $\log_{2}(k).$
+
+\begin{example} Para calcular 
+$$
+3^{19} \mod 23,
+$$
+realizamos las siguientes operaciones: 
+\begin{align*}
+ 3^{19} & = 3\cdot 3^{18} \mod 23\\ 
+  & = 3\cdot (3^{2})^{9} \mod 23 \\
+  & = 3\cdot 9^{9} \mod 23 \\
+  & = 3\cdot 9\cdot 9^{8} \mod 23 \\
+  & = 3\cdot 9\cdot (9^{2})^{4} \mod 23 \\
+  & = 3\cdot 9\cdot (81)^{4} \mod 23 \\
+  & = 3\cdot 9\cdot 12^{4} \mod 23 \\
+  & = 3\cdot 9\cdot (12^{2})^{2} \mod 23 \\ 
+  & = 3\cdot 9\cdot (144)^{2} \mod 23 \\
+  & = 3\cdot 9\cdot 6^{2} \mod 23 \\
+  & = 3\cdot 9\cdot 36 \mod 23 \\
+  & = 3\cdot 9\cdot 13 \mod 23 \\
+  & = 3\cdot 117 \mod 23 \\
+  & = 3\cdot 2 \mod 23 \\
+  & = 6 \mod 23.
+\end{align*}
+\end{example}
+Notamos que este procedimiento es mucho más rápido que multiplicar $3$ por sí mismo $19$ veces.
+
+
+

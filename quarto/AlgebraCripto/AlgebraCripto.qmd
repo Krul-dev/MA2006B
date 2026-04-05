@@ -1,0 +1,27 @@
+---
+lang: es
+title: |
+  Uso de álgebras modernas
+
+  para seguridad y criptografía
+format:
+  pdf:
+    fontsize: 11pt
+    pdf-engine: pdflatex
+    number-sections: true
+    include-in-header: _header.tex
+
+jupyter: python3
+
+highlight-style: tango 
+
+
+execute:
+    echo: true  
+---
+
+\tableofcontents
+
+{{< include _section1.qmd >}}
+{{< include _section2.qmd >}}
+{{< include _section3.qmd >}}

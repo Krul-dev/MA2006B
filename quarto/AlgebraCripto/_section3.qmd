@@ -1,0 +1,277 @@
+# Protocolos de encriptación de curvas elípticas
+
+## Curvas elípticas 
+
+\begin{definition} 
+Una curva elíptica, en forma de Weierstrass, es una curva de la forma
+$$
+y^2 = x^3 + c_{1}x + c_{0}
+$$
+que satisface la condición de que el discriminante 
+$$
+\Delta = -16(4c_{1}^3 + 27c_{0}^2)
+$$
+es distinto de cero.
+\end{definition}
+
+\begin{observation} La condición de que el discriminante sea distinto de cero es equivalente a que la curva no tenga puntos singulares. Esto garantiza que la curva tenga una estructura algebraica adecuada para ser utilizada en criptografía.
+\end{observation}
+
+A los puntos de una curva elíptica, junto con un punto especial llamado el "punto en el infinito", se les puede dar una estructura de grupo abeliano. Las operaciones en este grupo, para puntos regulares
+$$
+P=(x_{1},y_{1}) \qquad \text{y} \qquad Q=(x_{2},y_{2})
+$$
+con $x_{1} \neq x_{2}$, están dadas por las siguientes fórmulas:
+\begin{enumerate}
+\item $P+Q=(x_{3},y_{3})$ donde
+\begin{align*}
+\lambda = & \frac{y_{2} - y_{1}}{x_{2} - x_{1}} \\
+        x_{3} = & \lambda^{2}-x_{1}-x_{2} \\
+        y_{3} = & \lambda(x_{1}-x_{3})-y_{1}
+\end{align*}
+\item $2P=(x_{4}, y_{4})$ donde
+\begin{align*}
+\mu = & \frac{3x_{1}^{2}+ c_{1}}{2y_{1}} \\
+        x_{4} = & \mu^{2}-2x_{1} \\
+        y_{4} = & \mu(x_{1}-x_{4})-y_{1}
+\end{align*}
+\item $-P=(x_{1},-y_{1})$
+\end{enumerate}
+
+\begin{observation} Notemos que estas fórmulas están definidas sobre cualquier campo, pero en criptografía se suelen usar curvas elípticas definidas sobre campos finitos. Recordemos que en este caso la operación de división se realiza multiplicando por el inverso multiplicativo, el cual se puede calcular utilizando el algoritmo de Euclides extendido.
+\end{observation}
+
+\begin{example} Consideremos la curva elíptica $E$ definida sobre el campo $\F_{7} = \Z/7\Z$ y dada por la ecuación
+$$
+y^2 = x^3 + x + 1
+$$
+Notemos que en este caso el discriminante está dado por 
+$$
+\Delta = -16(4(1)^3 + 27(1)^2) = -16(4 + 27) = -16 \cdot 31 = 1 \mod 7
+$$
+lo que nos garantiza que la curva no tiene puntos singulares. Los puntos de esta curva son
+$$
+E(\F_{7}) = \{ \infty, (0, 1), (0, 6), (2, 2), (2, 5)\}
+$$
+Tomemos ahora $P = (0, 1)$ y $Q = (2, 2)$. Para calcular $P + Q$, primero calculamos $\lambda$:
+$$
+\lambda = \frac{2 - 1}{2 - 0} = \frac{1}{2} = 4 \mod 7
+$$
+Luego, calculamos $x_{3}$ y $y_{3}$:
+\begin{align*}
+x_{3} = & 4^{2} - 0 - 2 = 16 - 2 = 14 = 0 \mod 7 \\
+y_{3} = & 4(0 - 0) - 1 = -1 = 6 \mod 7
+\end{align*}
+Por lo tanto, $P + Q = (0, 6)$. Para calcular $2P$, primero calculamos $\mu$:
+$$
+\mu = \frac{3(0)^{2} + 1}{2(1)} = \frac{1}{2} = 4 \mod 7
+$$
+Luego, calculamos $x_{4}$ y $y_{4}$:
+\begin{align*}
+x_{4} = & 4^{2} - 2(0) = 16 = 2 \mod 7 \\
+y_{4} = & 4(0 - 2) - 1 = -8 - 1 = -9 = 5 \mod 7
+\end{align*}
+Por lo tanto, $2P = (2, 5)$. Finalmente, para calcular $-P$, simplemente negamos la coordenada $y$ de $P$:
+$$
+-P = (0, -1) = (0, 6) \mod 7
+$$
+\end{example}
+
+## El sistema Diffie-Hellman de curvas elípticas (ECDH)
+
+El sistema Diffie-Hellman de curvas elípticas (ECDH) es un sistema análogo al sistema Diffie-Hellman clásico, pero utiliza la estructura de grupo de una curva elíptica en lugar del grupo multiplicativo de un campo finito. Al igual que en el sistema clásico, el objetivo de ECDH es permitir que dos partes, digamos Alicia y Beto, establezcan una clave secreta compartida a través de un canal inseguro, que posteriormente se puede utilizar para cifrar la comunicación entre ellos utilizando un algoritmo de cifrado simétrico como AES.
+
+### Protocolo para la generación de una clave secreta compartida 
+
+Los pasos del algoritmo ECDH son los siguientes: 
+
+\begin{enumerate} 
+\item Alicia y Beto acuerdan utilizar una curva elíptica $E$ definida sobre un campo finito $\F_{p}$, y un punto base $G \in E(\F_{p})$ de orden $n$. Tanto la curva como el punto base y su orden son públicos, y pueden ser conocidos por todos los agentes, incluyendo Eva.
+
+\item Alicia y Beto eligen claves privadas a y b respectivamente, las cuales son números enteros
+aleatorios menores que n. Estas claves son secretas y no deben ser compartidas con nadie.
+
+\item Alicia y Beto calculan sus claves públicas A y B respectivamente, utilizando la siguiente
+fórmula:
+$$
+A = aG \in E(\F_{p})
+$$
+para la clave pública de Alicia, y
+$$
+B = bG \in E(\F_{p})
+$$
+para la clave pública de Beto. Estas claves públicas son enviadas a través del canal inseguro y
+pueden ser interceptadas por Eva.
+
+\item Alicia y Beto calculan la clave secreta compartida S utilizando la siguiente fórmula:
+$$
+S_{A} = aB = a(bG) = (ab)G \in E(\F_{p})
+$$
+para Alicia, y
+$$
+S_{B} = bA = b(aG) = (ab)G \in E(\F_{p})
+$$
+para Beto. Notamos que $S_{A} = S_{B}$ , es decir, ambos agentes han acordado la misma clave secreta.
+\end{enumerate}
+
+\begin{observation} Aunque en este caso la clave compartida es un punto $S$ sobre la curva elíptica, en la práctica se suele utilizar la primera coordenada de este punto como la clave secreta compartida. Para asegurarse de que esta coordenada tenga la longitud adecuada para ser utilizada como clave de cifrado, se suele aplicar una función hash a esta coordenada antes de utilizarla como clave de cifrado. 
+
+Notemos también que, tal y como en el caso del protocolo Diffie-Hellman clásico, la seguridad del protocolo ECDH se basa en la dificultad del problema del logaritmo discreto en curvas elípticas. Es decir, dado un punto $P$ y un múltiplo $kP$ de este punto, es computacionalmente difícil encontrar el entero $k$. Esto garantiza que incluso si Eva intercepta las claves públicas $A$ y $B$, no podrá calcular la clave secreta compartida $S$ sin conocer las claves privadas $a$ o $b$.
+\end{observation}
+
+**Nota:** Para elegir la curva elíptica y el punto base, se suelen utilizar curvas estándar que han sido ampliamente estudiadas y que se consideran seguras. Estas curvas estándar son publicadas por organizaciones como el NIST (National Institute of Standards and Technology) y el SECG (Standards for Efficient Cryptography Group). Por ejemplo, Bitcoin utiliza la curva secp256k1, la cual es una curva elíptica definida sobre el campo finito $\F_{p}$ con $p = 2^{256} - 2^{32} - 977$ y dada por la ecuación
+$$
+y^2 = x^3 + 7
+$$
+Mas detalles sobre esta curva se pueden encontrar en el documento \href{https://www.secg.org/sec2-v2.pdf}{SEC 2: Recommended Elliptic Curve Domain Parameters} publicado por el SECG.
+
+### Ejemplo de aplicación del sistema ECDH
+
+Ilustraremos ahora el sistema ECDH con un ejemplo concreto. Alicia y Beto acuerdan utilizar la curva elíptica $E$ definida sobre el campo finito $\F_{23} = \Z/23\Z$ y dada por la ecuación
+$$
+y^2 = x^3 + 3x + 2
+$$
+Notemos que el discriminante de esta curva está dado por 
+$$
+\Delta = 17 \mod 23
+$$
+lo que nos garantiza que la curva no tiene puntos singulares. El punto base elegido por Alicia y Beto es $G = (5, 2)$, el cual tiene orden $n = 28$. Alicia elige la clave privada $a = 6$ y Beto elige la clave privada $b = 15$. Para calcular las claves públicas, Alicia y Beto
+utilizan las fórmulas dadas anteriormente:
+\begin{align*}
+A = & 6G = 6(5, 2) = (4, 3) \in E(\F_{23}) \\
+B = & 15G = 15(5, 2) = (12, 15) \in E(\F_{23})
+\end{align*}
+Finalmente, Alicia y Beto calculan la clave secreta compartida 
+\begin{align*}
+S_{A} = & 6B = 6(12, 15) = (4, 3) \in E(\F_{23}) \\
+S_{B} = & 15A = 15(4, 3) = (4, 3) \in E(\F_{23})
+\end{align*}
+Notamos que $S_{A} = S_{B}$, es decir, ambos agentes han acordado la misma clave secreta.
+
+## El sistema para la generación de firmas digitales de curvas elípticas (ECDSA)
+
+Consideraremos ahora el sistema para la generación de firmas digitales de curvas elípticas (ECDSA), el cual es un sistema de firma digital que utiliza la estructura de grupo de una curva elíptica. Al igual que en el caso del sistema ECDH, ECDSA se basa en la dificultad del problema del logaritmo discreto en curvas elípticas para garantizar la seguridad de las firmas digitales generadas con este sistema. Cabe destacar que en aplicaciones modernas de criptografía, el uso de criptografía de curvas elípticas es cada vez más común debido a su eficiencia y seguridad, especialmente en dispositivos con recursos limitados como teléfonos móviles y dispositivos IoT. ECDSA es ampliamente utilizado en protocolos de seguridad como TLS (Transport Layer Security) y en criptomonedas como Bitcoin para garantizar la autenticidad e integridad de las transacciones.
+
+### Protocolo ECDSA para la generación de claves 
+
+El algoritmo ECDSA para la generación de claves es el siguiente: 
+
+\begin{enumerate}
+\item Alicia y Beto acuerda utilizar una curva elíptica $E$ definida sobre un campo finito $\F_{p} = \Z/p\Z$ para un primo $p$ y un punto base $G \in E(\F_{p})$ de orden $n$. Tanto la curva como el punto base y su orden son públicos, y pueden ser conocidos por todos los agentes, incluyendo Eva.
+
+\item Alicia elige un entero $1 < d < n$ de manera aleatoria, el cual será su clave privada. 
+
+\item Alicia calcula su clave pública $Q$ utilizando la siguiente fórmula:
+$$
+Q = dG \in E(\F_{p}) 
+$$
+y la comparte con Beto. 
+\end{enumerate} 
+
+### Protocolo ECDSA para la generación de firmas digitales 
+
+El algoritmo ECDSA para la generación de firmas digitales es el siguiente: 
+
+\begin{enumerate}
+\item Alicia elige un mensaje llano $m$ que desea firmar digitalmente y calcula su hash 
+$$
+h = \operatorname{hash}(m)
+$$
+donde $\operatorname{hash}$ es una función de hasheo que es criptográficamente segura, como SHA-256.
+
+\item Alicia elige un entero $k$ de manera aleatoria tal que $1 < k < n$ y $\mcd(k,n) = 1$. Es importante que $k$ sea único para cada firma, ya que la reutilización de $k$ puede comprometer la seguridad de la firma. 
+
+\item Alicia calcula el punto $R$ utilizando la siguiente fórmula:
+$$
+R = kG = \in E(\F_{p}) 
+$$
+y define $r = R_{1}$, es decir, la primera coordenada del punto $R$. Si $r = 0$, Alicia debe elegir un nuevo valor de $k$ y repetir este paso.
+
+\item Alicia calcula 
+$$
+s = \frac{h + dr}{k} \mod n 
+$$ 
+Si $\mcd(s,n) \neq 1$, Alicia debe elegir un nuevo valor de $k$ y repetir este proceso.
+
+\item El mensaje firmado es 
+$$
+\text{mensaje\_firmado} = (m, r, s)
+$$ 
+\end{enumerate} 
+
+### Protocolo ECDSA para la verificación de firmas digitales 
+
+El algoritmo ECDSA para la verificación de firmas digitales es el siguiente:
+\begin{enumerate}
+\item Beto recibe el mensaje firmado $(m, r, s)$ y calcula el hash del mensaje llano $m$:
+$$
+h = \operatorname{hash}(m)
+$$
+
+\item Beto calcula 
+\begin{align*}
+w = & s^{-1} \mod n \\
+u_{1} = & hw \mod n \\
+u_{2} = & rw \mod n \\
+P = & u_{1}G + u_{2}Q \in E(\F_{p})
+\end{align*}
+
+\item Beto verifica que $P \neq \infty$ y define $p = P_{1}$, es decir, la primera coordenada del punto $P$. Si $p = r$, entonces la firma es válida, de lo contrario, la firma es inválida.
+\end{enumerate}
+
+### Ejemplo de aplicación del sistema ECDSA 
+
+Ilustraremos ahora el sistema ECDSA con un ejemplo concreto. Alicia y Beto acuerdan utilizar la curva elíptica $E$ definida sobre el campo finito $\F_{23} = \Z/23\Z$ y dada por la ecuación
+$$
+y^2 = x^3 + 3x + 2 
+$$
+Notemos que el discriminante de esta curva está dado por 
+$$
+\Delta = 17 \mod 23
+$$
+lo que nos garantiza que la curva no tiene puntos singulares. El punto base elegido por Alicia y Beto es $G = (5, 2)$, el cual tiene orden $n = 28$. Alicia elige la clave privada $d = 6$ y calcula su clave pública $Q$ utilizando la fórmula dada anteriormente:
+$$
+Q = 6G = 6(5, 2) = (4, 3) \in E(\F_{23})
+$$
+Alicia desea firmar digitalmente el mensaje $m = 15$ y utiliza como función de hasheo la función identidad, es decir, $\operatorname{hash}(m) = m$. Por lo tanto, el hash del mensaje llano es $h = 15$. Alicia elige un entero $k$ de manera aleatoria, por ejemplo $k = 9$, y verifica que $\mcd(k,n) = 1$. Luego, Alicia calcula el punto $R$ utilizando la fórmula dada anteriormente:
+$$
+R = 9G = 9(5, 2) = (2, 19) \in E(\F_{23})
+$$
+En particular, $r = R_{1} = 2$. Luego, Alicia calcula $s$ utilizando la fórmula dada anteriormente:
+$$
+s = \frac{15 + 6 \cdot 2}{9} = 3 \mod 28
+$$
+Por lo tanto, el mensaje firmado es 
+$$
+\text{mensaje\_firmado} = (15, 2, 3) 
+$$
+Beto recibe el mensaje firmado $(15, 2, 3)$ y calcula el hash del mensaje llano $m$ que en este caso es simplemente $h = 15$. Luego, Beto calcula $w$, $u_{1}$, $u_{2}$ y $P$ utilizando las fórmulas dadas anteriormente: 
+\begin{align*}
+w = & 3^{-1} = 19 \mod 28 \\ 
+u_{1} = & 15 \cdot 19 = 5 \mod 28 \\
+u_{2} = & 2 \cdot 19 = 10 \mod 28 \\
+P = & 5G + 10Q = 5(5, 2) + 10(4, 3) = (2, 19) \in E(\F_{23})
+\end{align*}
+En particular, $p = P_{1} = 2$. Como $p = r$, entonces la firma es válida.
+
+### Detalles técnicos del sistema ECDSA
+
+Un detalle técnico importante del sistema ECDSA es que el número $k$ utilizado para generar la firma digital debe ser único para cada firma. Si se reutiliza el mismo valor de $k$ para firmar dos mensajes diferentes, entonces, de las fórmulas 
+$$
+s_{1} = \frac{h_{1} + dr}{k} \mod n 
+$$
+y
+$$
+s_{2} = \frac{h_{2} + dr}{k} \mod n 
+$$
+obtenemos que 
+$$
+k = \frac{h_{1} - h_{2}}{s_{1} - s_{2}} \mod n 
+$$
+A partir de este valor de $k$, un atacante podría calcular la clave privada $d$ utilizando la fórmula 
+$$
+d = \frac{s_1{k} - h_1}{r} \mod n
+$$
+\begin{observation} Debemos notar que este fue el error que cometió Sony en 2011 al generar firmas digitales para sus consolas PlayStation 3. Sony utilizó el mismo valor de $k$ para generar varias firmas digitales, lo que permitió a los atacantes calcular la clave privada de Sony y comprometer la seguridad de las consolas PlayStation 3. Este incidente es un ejemplo claro de la importancia de utilizar un valor único de $k$ para cada firma digital generada con el sistema ECDSA.
+\end{observation} 
+

@@ -1,0 +1,469 @@
+# Protocolos de encriptación clásicos 
+
+En esta sección consideraremos los protocolos criptográficos clásicos, es decir, aquellos basados en aritmética modular y que no utilizan curvas elípticas. El contexto estándar de estos protocolos es el siguiente: supongamos que tenemos dos agentes, digamos Alicia y Beto, que desean intercambiar información a través de un canal inseguro. Supongamos además que tenemos un agente hostil, digamos Eva, que puede interceptar toda la comunicación que se envía a través de este canal.
+$$
+\includegraphics[height=4cm]{AliciaBetoEva}
+$$
+El objetivo de nuestros protocolos es asegurarnos de que Alicia y Beto puedan comunicarse de manera segura, es decir, que Eva no pueda leer la información que se están transmitiendo. Dependiendo del tipo de información que se desea intercambiar, podemos utilizar diferentes protocolos criptográficos que nos permitan lograr este objetivo.
+
+## El sistema RSA
+
+El sistema RSA, introducido por Rivest, Shamir y Adleman en 1977, es un sistema criptográfico de clave pública que se utiliza ampliamente en la industria. Este sistema consiste de cinco algoritmos:
+
+\begin{enumerate}
+\item Un algoritmo para la generación de una \emph{clave pública} y una \emph{clave privada.}
+
+\item Un algoritmo para el \emph{cifrado de mensajes.}
+
+\item Un algoritmo para el \emph{descifrado de mensajes.}
+
+\item Un algoritmo para la \emph{firma de mensajes.}
+
+\item Un algoritmo para la \emph{verificación de firmas.}
+\end{enumerate}
+
+### Protocolo RSA para la generación de claves
+
+
+El algoritmo para la generación de las claves pública y privada consiste de los siguientes pasos:
+
+\begin{enumerate}
+\item Alicia selecciona dos números primos aleatorios $p$ y $q.$
+
+\item Alicia calcula 
+$$
+n=pq, \qquad \phi(n)=(p-1)(q-1).
+$$
+
+\item Alicia elige un número $0 < e < \phi(n)$ tal que
+$$
+\operatorname{mcd}(\phi(n), e) = 1. 
+$$
+
+\item \label{item_inverso} Alicia calcula un $1<d <\phi(n)$ tal que
+$$
+ed = 1 \qquad  \mod \phi(n).
+$$
+
+\item Alicia define su clave pública y privada como
+
+\begin{align*}
+\mbox{clave\_publica} & =(e, n) \\
+\mbox{clave\_privada} &=(d, n)
+\end{align*}
+
+y comunica su clave pública a Beto. 
+
+\end{enumerate}
+
+**Notas:** Con respecto al algoritmo para la generación de claves, notemos lo siguiente:
+
+1. Eva también puede conocer la clave pública de Alicia, pero no su clave privada.
+2. En la práctica, el número $e$ es comúnmente $e=3$ o $e=65537$. Estos números son elegidos por razones de eficiencia, ya que permiten realizar el cifrado de manera más rápida. Sin embargo, es importante asegurarse de que $\operatorname{mcd}(\phi(n), e)=1$. 
+3. En la práctica, el número $d$ es calculado utilizando el algoritmo de Euclides extendido, el cual permite encontrar el inverso multiplicativo de $e$ módulo $\phi(n)$. Este algoritmo es eficiente y se puede implementar fácilmente en cualquier lenguaje de programación. 
+4. En la práctica, el número $d$ es comúnmente almacenado en un formato binario, lo cual permite una representación más compacta y eficiente. Sin embargo, es importante asegurarse de que el número $d$ sea almacenado de manera segura y no sea accesible a agentes no autorizados. 
+5. Notemos que si logramos factorizar $n$ en sus factores primos $p$ y $q$, entonces podemos calcular $\phi(n)$ y, por lo tanto, podemos calcular la clave privada $d$. Por esta razón, la seguridad del sistema RSA depende de la dificultad de factorizar números enteros grandes. En general, se recomienda utilizar números primos de al menos 1024 bits para asegurar la integridad del sistema.
+
+
+
+
+### Protocolo RSA para el cifrado de mensajes
+
+El algoritmo consiste de los siguientes pasos:
+
+\begin{enumerate}
+\item Beto selecciona un mensaje $m_{b}$ tal que $0<m_{b}<n$ y define 
+$$
+\mbox{mensaje\_llano} = (m_{b},n)
+$$
+
+\item Beto calcula 
+$$
+c = m_{b}^{e} \qquad \mod n.
+$$
+y define 
+$$
+\mbox{mensaje\_cifrado}=(c,n).
+$$
+Este es el mensaje cifrado que Beto puede compartir con Alicia a través del canal inseguro.
+\end{enumerate}
+
+### Protocolo RSA para el descifrado de mensajes
+
+
+El algoritmo consiste de los siguientes pasos:
+\begin{enumerate}
+\item 
+Alicia calcula 
+$$
+\tilde{m}_{b} = c^{d} \qquad \mod n
+$$
+y define
+$$
+\mbox{mensaje\_descifrado}  =(\tilde{m}_{b},n).
+$$
+\item Alicia puede proceder ahora a leer el contenido $\tilde{m}_{b}$ del mensaje descifrado. 
+\end{enumerate}
+
+**Notas:**
+
+1. Notemos que como Eva no conoce la clave privada de Alicia, no puede descifrar el mensaje cifrado $c$. Por lo tanto, el mensaje cifrado es seguro y no puede ser leído por Eva.
+
+2. En la práctica, el sistema de encriptación RSA es mucho más ineficiente que el uso de algoritmos de cifrado simétrico como AES. Como veremos en la siguiente sección, el algoritmo de Diffie-Hellman permite acordar una clave secreta entre dos agentes, la cual puede ser utilizada posteriormente para cifrar la comunicación entre ellos. Es por eso que este algoritmo ya no es tan utilizado en la práctica. Sin embargo, el algoritmo RSA sigue siendo ampliamente utilizado para la firma digital de mensajes y la verificación de firmas.
+
+
+### Protocolo RSA para la firma de mensajes 
+
+El algoritmo consiste de los siguientes pasos:
+
+\begin{enumerate}
+\item Alicia selecciona un mensaje $m_{a}$ tal que $0<m_{a}<n$ y define 
+$$
+\mbox{mensaje\_llano} =	(m_{a},n).
+$$
+\item Alicia utiliza una función de hasheo para calcular el hash del mensaje $m_{a}$, es decir, calcula 
+$$
+h = \operatorname{Hash}(m_{a}). 
+$$
+\item Alicia calcula 
+$$
+s = h^{d} \qquad \mod n 
+$$ 
+y define 
+$$
+\mbox{mensaje\_firmado} = (m_{a},s).
+$$ 
+Este es el mensaje firmado que Alicia puede compartir con Beto a través del canal inseguro. 
+\end{enumerate} 
+
+### Protocolo RSA para la verificación de firmas 
+
+El algoritmo consiste de los siguientes pasos: 
+\begin{enumerate}
+\item Beto utiliza una función de hasheo para calcular el hash del mensaje $m_{a}$, es decir, calcula 
+$$
+h = \operatorname{Hash}(m_{a}). 
+$$
+\item Beto calcula 
+$$
+\tilde{h} = s^{e} \qquad \mod n 
+$$ 
+y verifica que 
+$$ 
+h = \tilde{h} \qquad \mod n. 
+$$ 
+\end{enumerate} 
+
+**Notas:**  En la práctica, el hash $h$ es comúnmente calculado utilizando una función de hasheo como SHA-256 o SHA-512, lo cual permite una representación más compacta y eficiente. Sin embargo, es importante asegurarse de que la función de hasheo utilizada sea segura y no sea vulnerable a ataques de colisión. 
+
+En general los algoritmos de generación de firma digital y su verificación buscan cumplir con los siguientes objetivos:
+
+1. **Autenticidad:** El receptor del mensaje debe poder verificar que el mensaje fue realmente enviado por el remitente y no por un agente malicioso. Esto se logra utilizando la clave privada del remitente para firmar el mensaje y la clave pública del remitente para verificar la firma. Como solamente Alicia tiene acceso a su clave privada, solamente ella puede firmar el mensaje. 
+2. **Integridad:** El receptor del mensaje debe poder verificar que el mensaje no ha sido modificado durante la transmisión. Esto se logra utilizando una función de hasheo para calcular el hash del mensaje y compararlo con el hash firmado por el remitente. Si los hashes son iguales, entonces el mensaje no ha sido modificado. 
+3. **No repudio:** El remitente del mensaje no puede negar haber enviado el mensaje. Esto se logra utilizando la clave privada del remitente para firmar el mensaje y la clave pública del remitente para verificar la firma. Como solamente Alicia tiene acceso a su clave privada, solamente ella puede firmar el mensaje y por tanto no puede negar haber enviado el mensaje ni repudiar el contenido del mismo.
+
+### Ejemplo de aplicación del sistema RSA
+
+Ilustraremos ahora los algoritmos del protocolo RSA con ejemplos concretos. 
+\begin{enumerate}
+\item \textbf{Generación de claves.} Tomaremos
+$$
+p=5, \qquad q=11.
+$$
+Entonces tendremos que
+$$
+n=5(11)=55, \qquad \phi(n)=4(10)=40.
+$$
+Elegimos ahora $e=3$ y observamos que
+$$
+\mcd(40,3)=1.
+$$
+Utilizando el algoritmo de Euclides extendido, calculamos el inverso de $3$ módulo $40$ para obtener
+$$
+d=27.
+$$
+Por lo tanto, tenemos que
+\begin{align*}
+\mbox{clave\_publica} & =(3,55) \\
+\mbox{clave\_privada} &= (27,55).
+\end{align*}
+
+\item \textbf{Cifrado de mensajes.} Supongamos que Beto quiere enviar el mensaje $m_{b}=7$ a Alicia. Entonces, Beto calcula 
+$$ 
+c = 7^{3} = 13 \qquad \mod 55. 
+$$ 
+Por lo tanto, el mensaje cifrado que Beto envía a Alicia es 
+$$ 
+\mbox{mensaje\_cifrado} = (13,55). 
+$$ 
+\item \textbf{Descifrado de mensajes.} Alicia recibe el mensaje cifrado $c=13$ y calcula 
+$$ 
+\tilde{m}_{b} = 13^{27} = 7 \qquad \mod 55. 
+$$
+Notemos que el mensaje descifrado es el mismo que el mensaje original enviado por Beto. Por lo tanto, Alicia puede leer el mensaje descifrado $\tilde{m}_{b}=7$.
+
+\item \textbf{Firma de mensajes.} Supongamos que Alicia quiere firmar el mensaje $m_{a}=9$. Entonces, Alicia define 
+$$ 
+\mbox{mensaje\_llano} = (9,55). 
+$$
+Para este ejemplo, consideraremos la función de hasheo como la función identidad, es decir, 
+$$ 
+h = \operatorname{Hash}(m_{a}) = m_{a} = 9. 
+$$
+Por tanto Alicia debe de calcular
+$$
+s = 9^{27} = 4 \qquad \mod 55. 
+$$ 
+Se sigue que el mensaje firmado que Alicia envía a Beto es 
+$$ 
+\mbox{mensaje\_firmado} = (9,4). 
+$$ 
+\item \textbf{Verificación de firmas.} Beto recibe el mensaje firmado $(9,4)$ y calcula 
+$$ 
+\tilde{h} = 4^{3} = 9 \qquad \mod 55. 
+$$ 
+Beto verifica que el mensaje firmado es correcto al comprobar que 
+$$ 
+ \tilde{h} =9 = h \qquad \mod 55. 
+$$
+
+\end{enumerate}
+
+
+### Detalles técnicos del sistema RSA
+
+
+Para aplicar y entender el sistema RSA, debemos resolver los siguientes problemas técnicos:
+
+\begin{enumerate}
+
+\item En el paso \ref{item_inverso} del algoritmo RSA para la generación de claves debemos resolver la ecuación
+\begin{equation} \label{eq_inverse}
+ed = 1 \qquad \mod \phi(n)
+\end{equation}
+bajo la condición de que $\mcd(\phi(n), e)=1.$ El algoritmo de Euclides extendido nos proporciona un método eficiente para calcular $d.$
+
+\item Demostrar que, efectivamente,
+$$
+\tilde{m} = c^{d} = (m^{e})^{d} = m^{ed} = m \qquad \mod n.
+$$
+Para esto notemos que de la ecuación \eqref{eq_inverse} se sigue que $ed = 1 + k \phi(n)$ para algún entero $k$. Por lo tanto,
+\begin{align*}
+\tilde{m} & = m^{ed} \mod n \\
+& = m^{1+k\phi(n)} \mod n \\
+& = m (m^{\phi(n)})^{k} \mod n.
+\end{align*}
+Ahora, por el teorema de Lagrange, tenemos que $m^{\phi(n)} = 1 \mod n$. De aquí se sigue que 
+$$
+\tilde{m} = m \mod n,
+$$
+tal y como queríamos demostrar.
+
+\item Estimar la seguridad del sistema. En particular, tratar de estimar el tiempo que tomaría romper el sistema cuando se desconoce la clave privada.
+\end{enumerate}
+
+\begin{observation}
+En la práctica, los valores de $p$ y $q$ deben ser muy grandes para asegurar la integridad del sistema. Por ejemplo, si tomamos $p=5$, $q=3$ y $e=3$, entonces la siguiente tabla nos da la información necesaria para romper este protocolo:
+
+\vskip 15pt
+
+\begin{center}
+\begin{tabular}{|c|| c | c | c | c | c | c | c | c | c | c | c | c | c | c | c |}
+\hline
+m & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 \\
+\hline
+c  & 0 & 1 & 8 & 12 & 4 & 5 & 6 & 13 & 2 & 9 & 10 & 11 & 3 & 7 & 14 \\
+\hline
+\end{tabular}
+\end{center}
+\end{observation}
+
+## El sistema de Diffie-Hellman 
+
+El objetivo del sistema de Diffie-Hellman es que Alicia y Beto puedan acordar una clave secreta, la cual podrá ser utilizada posteriormente para cifrar la comunicación entre ellos utilizando un algoritmo de cifrado simétrico como AES.
+
+### Protocolo para la generación de una clave secreta compartida
+
+Los pasos del algoritmo son los siguientes: 
+
+1. Alicia y Beto acuerdan un número primo $p$ y una base $g$. Estos números pueden ser públicos y conocidos por todos los agentes, incluyendo Eva.
+
+2. Alicia y Beto eligen claves privadas $a$ y $b$ respectivamente, las cuales son números enteros aleatorios menores que $p$. Estas claves son secretas y no deben ser compartidas con nadie.
+
+3. Alicia y Beto calculan sus claves públicas $A$ y $B$ respectivamente, utilizando la siguiente fórmula: 
+$$
+A = g^a \mod p 
+$$
+para la clave pública de Alicia y
+$$
+B = g^b \mod p 
+$$
+para la clave pública de Beto. Estas claves públicas son enviadas a través del canal inseguro y pueden ser interceptadas por Eva. 
+
+4. Alicia y Beto calculan la clave secreta compartida $s$ utilizando la siguiente fórmula:
+$$ 
+s_{A} = B^a = (g^b)^a = g^{ba} \mod p 
+$$
+para Alicia y 
+$$
+s_{B} = A^b = (g^a)^b = g^{ab} \mod p 
+$$ 
+para Beto. Notamos que $s_{A} = s_{B}$, es decir, ambos agentes han acordado la misma clave secreta. 
+
+**Nota:** Para elegir los parámetros $p$ y $g$ es común utilizar una de las opciones listadas en la especificación \href{https://www.ietf.org/rfc/rfc3526.txt}{RFC 3526} publicada por el IETF en el 2003. Esta especificación incluye una lista de números primos de 1536, 2048, 3072, 4096, 6144 y 8192 bits, así como sus respectivas bases. 
+
+En general, un \emph{primo de Sophie Germain} es un número primo $q$ tal que $p = 2q + 1$ también es primo. En este caso, decimos que $p$ es un \emph{primo seguro}. Todos los primos de la lista de la especificación RFC 3526 son primos seguros. En este caso, para evitar ataques de subgrupos pequeños, se recomienda que las claves públicas $A$ y $B$ pertenezcan al subgrupo de orden $g$ generado por $g^{2}$. Para esto basta generar números aleatorios $\tilde{a}$, $\tilde{b}\leq q-1$ y tomar $a = 2\tilde{a}$ y $b = 2\tilde{b}$. En general, para asegurar que el protocolo es resistente a ataques por fuerza bruta, se recomienda que $\tilde{a}$ y $\tilde{b}$ sean números aleatorios de al menos 256 bits. Notemos que la seguridad de este protocolo depende de la dificultad de resolver el problema del logaritmo discreto, es decir, dado $g$, $p$ y $A=g^a \mod p$, encontrar el número $a$. Como vimos anteriormente, el cálculo de $g^{a} \mod p$ se puede realizar de manera eficiente utilizando exponenciación binaria, pero el cálculo del logaritmo discreto es un problema difícil y no se conoce ningún algoritmo eficiente para resolverlo en general. Por esta razón, el protocolo de Diffie-Hellman es considerado seguro y resistente a ataques por fuerza bruta.
+
+### Ejemplo de aplicación del sistema Diffie-Hellman 
+
+Ilustraremos ahora el sistema Diffie-Hellman con un ejemplo concreto. Alicia y Beto acuerdan el número primo $p=23$ y la base $g=5$. A continuación, Alicia elige la clave privada $a=6$ y Beto elige la clave privada $b=15$. Para calcular las claves públicas, Alicia y Beto utilizan las fórmulas dadas anteriormente:
+\begin{align*}
+A & = 5^{6} = 8 \mod 23 \\
+B & = 5^{15} = 19 \mod 23
+\end{align*}
+Finalmente, Alicia y Beto calculan la clave secreta compartida.
+\begin{align*}
+s_{A} & = 19^{6} = 2 \mod 23 \\
+s_{B} & = 8^{15} = 2 \mod 23 
+\end{align*}
+Notamos que $s_{A} = s_{B} = 2$, es decir, ambos agentes han acordado la misma clave secreta.
+
+
+
+## El sistema de encriptación ElGamal
+
+El sistema de encriptación ElGamal, introducido por Taher ElGamal en 1985, es un protocolo de encriptación de clave pública basado en el protocolo de Diffie-Hellman. Este sistema consiste de tres algoritmos: 
+
+\begin{enumerate}
+\item Un algoritmo para la generación de una clave pública y una clave privada.
+\item Un algoritmo para el cifrado de mensajes.
+\item Un algoritmo para el descifrado de mensajes.
+\end{enumerate}
+
+### Protocolo ElGamal para la generación de claves 
+
+El algoritmo para la generación de las claves pública y privada consiste de los siguientes pasos:
+
+\begin{enumerate}
+  \item Alicia selecciona un número primo $p$ y un generador $g$ del grupo multiplicativo $(\Z/p\Z)^{\ast}$. Estos números pueden ser públicos y conocidos por todos los agentes, incluyendo Eva.
+  \item Alicia elige de manera aleatoria un número $x$ tal que
+  $$
+  1 < x < p-1
+  $$
+  \item Alicia calcula
+  $$
+  y = g^{x} \mod p 
+  $$
+  y define su clave pública como
+  $$
+  \text{clave\_publica} = (g,y,p).
+  $$
+  y su clave privada como 
+  $$
+  \text{clave\_privada} = (g,x,p).
+  $$
+\end{enumerate}
+
+### Protocolo ElGamal para el cifrado de mensajes 
+El algoritmo para el cifrado de mensajes consiste de los siguientes pasos:
+
+\begin{enumerate}
+  \item Beto selecciona un mensaje $m$ tal que $0 < m < p$ y define 
+  $$
+  \text{mensaje\_llano} = (m,p).
+  $$
+  \item Beto elige de manera aleatoria un número $k$ tal que
+  $$
+  1 < k < p-1
+  $$
+  \item Beto calcula
+  \begin{align*}
+    c_{1} & = g^{k} \mod p \\
+    c_{2} & = m y^{k} \mod p 
+  \end{align*}
+  \item Beto envía el mensaje cifrado
+  $$
+  \text{mensaje\_cifrado} = ((c_{1},c_{2}),p)
+  $$
+  a través del canal inseguro.
+\end{enumerate}
+
+### Protocolo ElGamal para el descifrado de mensajes 
+El algoritmo para el descifrado de mensajes consiste de los siguientes pasos:
+
+\begin{enumerate}
+  \item Alicia recibe el mensaje cifrado $((c_{1},c_{2}),p)$ y calcula
+  $$
+    s = c_{1}^{x} \mod p
+  $$
+  \item Alicia calcula el inverso multiplicativo de $s$ módulo $p$, es decir, calcula un número $s^{-1}$ tal que 
+  $$
+  s s^{-1} = 1 \qquad \mod p.
+  $$
+  \item Alicia calcula 
+  $$
+  \tilde{m} = c_{2} s^{-1} \mod p.
+  $$
+  \item Alicia define el mensaje descifrado como
+  $$
+  \text{mensaje\_descifrado} = (\tilde{m},p).
+  $$
+\end{enumerate}
+
+### Ejemplo de aplicación del sistema ElGamal 
+
+Ilustraremos ahora los algoritmos del protocolo ElGamal con un ejemplo concreto.
+
+1. **Generación de claves.** Alicia selecciona el número primo $p=23$ y el generador $g=5$. Alicia elige de manera aleatoria el número $x=6$ y calcula 
+\begin{align*}
+y & = 5^{6} = 8 \mod 23 \\
+\text{clave\_publica} & = (5,8,23) \\
+\text{clave\_privada} & = (5,6,23).
+\end{align*}
+2. **Cifrado de mensajes.** Supongamos que Beto quiere enviar el mensaje $m=7$ a Alicia. Beto elige de manera aleatoria el número $k=15$ y calcula 
+\begin{align*}
+c_{1} & = 5^{15} = 19 \mod 23 \\
+c_{2} & = 7 \cdot 8^{15} = 14 \mod 23.
+\end{align*}
+Por lo tanto, el mensaje cifrado que Beto envía a Alicia es 
+$$
+\text{mensaje\_cifrado} = ((19,14),23).
+$$
+3. **Descifrado de mensajes.** Alicia recibe el mensaje cifrado $((19,14),23)$ y calcula 
+\begin{align*}
+s & = 19^{6} = 2 \mod 23 \\
+s^{-1} & = 12 \mod 23 \\
+\tilde{m} & = 14 \cdot 12 = 7 \mod 23.
+\end{align*}
+Por lo tanto, el mensaje descifrado que Alicia obtiene es $\tilde{m}=7$, el mismo mensaje que Beto envió originalmente.
+
+### Detalles técnicos del sistema ElGamal 
+
+Recordemos que 
+$$
+y = g^{x} \mod p 
+$$ 
+y que el mensaje cifrado es $((c_{1},c_{2}),p)$, donde 
+\begin{align*} 
+c_{1} & = g^{k} \mod p \\
+c_{2} & = m y^{k} \mod p.
+\end{align*}
+Para descifrar el mensaje, Alicia calcula 
+\begin{align*}
+s & = c_{1}^{x} \mod p \\ 
+  & = (g^{k})^{x} \mod p \\ 
+  & = (g^{x})^{k} \mod p \\ 
+  & = y^{k} \mod p.
+\end{align*}
+Como 
+$$
+c_{2} = m y^{k} \mod p,
+$$
+tenemos que 
+\begin{align*}
+\tilde{m} & = c_{2} s^{-1} \mod p \\
+& = m y^{k} s^{-1} \mod p \\
+& = m y^{k} (y^{k})^{-1} \mod p \\
+& = m \mod p.
+\end{align*}
+Esto garantiza que el mensaje descifrado $\tilde{m}$ es igual al mensaje original $m$ enviado por Beto.

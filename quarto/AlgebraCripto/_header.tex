@@ -1,0 +1,404 @@
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{amssymb,amsthm,amsxtra}
+\usepackage{amscd}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{enumerate}%
+\usepackage[all]{xy}
+\usepackage{aurical}
+\usepackage[T1]{fontenc}
+\usepackage{fullpage}
+
+
+
+\newcommand*\IsoTo{%
+  \xrightarrow[]{\raisebox{-0.5 em}{\smash{\ensuremath{\sim}}}}%
+}
+
+
+\theoremstyle{plain}
+
+\newtheorem*{theorem*}{Theorem}
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{proposition}[lemma]{Proposition}
+\newtheorem{theorem}[lemma]{Teorema}
+\newtheorem{corollary}[lemma]{Corollary}
+\newtheorem{conjecture}[lemma]{Conjecture}
+\newtheorem*{conjecture*}{Conjecture}
+
+\newtheorem{thm}[lemma]{Theorem}
+\newtheorem{prop}[lemma]{Proposition}
+\newtheorem{lem}[lemma]{Lemma}
+\newtheorem{cor}[lemma]{Corollary}
+
+\newtheorem{introtheorem}{Theorem}
+\renewcommand{\theintrotheorem}{\Alph{introtheorem}}
+\newtheorem{introcor}[introtheorem]{Corollary}
+\newtheorem{introthm}[introtheorem]{Theorem}
+\newtheorem{introlem}[introtheorem]{Lemma}
+\newtheorem{conj}[lemma]{Conjecture}
+
+\theoremstyle{definition}
+
+\newtheorem{definition}[lemma]{Definición}
+\newtheorem{defn}[lemma]{Definition}
+\newtheorem{dfn}[lemma]{Definition}
+\newtheorem{notn}[lemma]{Notation}
+\newtheorem{goal}[lemma]{Objetivo}
+
+\newtheorem{exm}[lemma]{Example}
+\newtheorem{exc}[lemma]{Exercise}
+
+
+\newtheorem{example}[lemma]{Ejemplo}
+
+
+\newtheorem{notation}[lemma]{Notation}
+%\newtheorem{result}{Result}[section]
+%\newtheorem{property}[lemma]{Property}
+
+\newtheorem{construction}[lemma]{Construction}
+\newtheorem{cond}[lemma]{Condition}
+\newtheorem{case}{Case}
+
+\newtheorem*{example*}{Example}
+
+
+\newtheorem{definicion}[lemma]{Definición}
+\newtheorem{notacion}[lemma]{Notación}
+\newtheorem{ejemplo}[lemma]{Ejemplo}
+\newtheorem{ejercicio}[lemma]{Ejercicio}
+\newtheorem{observacion}[lemma]{Observación}
+\newtheorem{problema}[lemma]{Problema}
+\newtheorem{solucion}[lemma]{Solución}
+
+
+
+
+\theoremstyle{remark}
+
+\newtheorem*{remark*}{Remark}
+\newtheorem{rem}[lemma]{Remark}
+\newtheorem{conc}[lemma]{Conclusion}
+
+\newtheorem{introremark}[introtheorem]{Remark}
+
+\newtheorem{remark}[lemma]{Remark}
+\newtheorem{observation}[lemma]{Observación}
+
+
+\newcommand{\mcd}{\operatorname{mcd}}
+\newcommand{\emcd}{\operatorname{emcd}}
+\newcommand{\ram}{\operatorname{ram}}
+\newcommand{\tr}{\operatorname{Tr}}
+\newcommand{\www}{\mathfrak{W}}
+\newcommand{\ob}{\operatorname{ ob}}
+\newcommand{\ind}{\operatorname{ind}}
+\newcommand{\bc}{\operatorname{bc}}
+\newcommand{\symm}{\mathbb{S}}
+\newcommand{\res}{\operatorname{Res}_{s=1}}
+\newcommand{\ad}{\operatorname{ad}}
+\newcommand{\bes}{\mathfrak{B}}
+\newcommand{\eisen}{\mathcal{E}}
+\newcommand{\rest}{\lvert}
+\newcommand{\dd}{\mathfrak{D}}
+\newcommand{\uu}{\mathcal{U}}
+\newcommand{\hh}{\mathcal{H}}
+\newcommand{\ff}{\mathcal{F}}
+\newcommand{\jj}{\mathfrak{J}}
+\newcommand{\pp}{\mathfrak{p}}
+\newcommand{\oo}{\mathcal{O}}
+\renewcommand{\P}{\mathcal{P}}
+\newcommand{\ch}{{\bf 1}}
+\newcommand{\sss}{\mathcal{S}}
+\newcommand{\ww}{\mathcal{W}}
+\newcommand{\bb}{\mathcal{B}}
+\newcommand{\ii}{\mathcal{I}}
+\newcommand{\LL}{\mathcal{L}}
+%\newcommand{\k}{\Fontauri k}
+
+\newcommand{\ccc}{\mathcal{C}}
+\newcommand{\nm}{\operatorname{Nm}}
+\newcommand{\bs}{\backslash}
+\newcommand{\swrtz}{\mathcal{S}}
+\newcommand{\Rep}{\operatorname{Rep}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Mat}{\operatorname{Mat}}
+\newcommand{\Rad}{\operatorname{Rad}}
+\newcommand{\oH}{\operatorname{H}}
+%\newcommand{\H}{\operatorname{H}}
+\newcommand{\Iso}{\operatorname{Iso}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\kk}{{\bf K}}
+\newcommand{\zz}{\mathbb{Z}}
+\newcommand{\nn}{\mathbb{N}}
+\newcommand{\cc}{\mathbb{C}}
+%\newcommand{\qq}{\mathbb{Q}}$c(D,\psi)$
+\newcommand{\rr}{\mathbb{R}}
+\newcommand{\disc}{\Delta}
+\newcommand{\modulus}{\delta}
+\newcommand{\aaa}{\mathfrak{a}}
+\newcommand{\aut}{\mathcal{A}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\vol}{\operatorname{vol}}
+\newcommand{\length}{\operatorname{length}}
+\newcommand{\depth}{\operatorname{depth}}
+\newcommand{\Ht}{H}
+\newcommand{\schwartzp}{C_c^\infty(M_n(F))}
+\newcommand{\schwartz}{C_c^\infty(H_n(E/F))}
+\newcommand{\diff}{\mathfrak{d}}
+\newcommand{\triv}{{\bf 1}}
+\newcommand{\stab}{\operatorname{Stab}}
+\newcommand{\Ind}{\operatorname{Ind}}
+\newcommand{\id}{\operatorname{Id}}
+\newcommand{\re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\newcommand{\Ker}{\operatorname{Ker}}
+
+\newcommand{\vrel}{{v_{\operatorname{rel}}}}
+\newcommand{\vaux}{{v_{\operatorname{aux}}}}
+\newcommand{\vcusp}{{v_{\operatorname{cusp}}}}
+\newcommand{\match}[1]{\mathop{\longleftrightarrow}\limits^{#1}}
+\newcommand{\pperp}{\hbox{$\perp\hskip-6pt\perp$}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\PP}{{\mathbb P}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\R}{{\mathbb R}}
+\newcommand{\bR}{{\mathbb R}}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\K}{{\mathbb K}}
+%\newcommand{\F}{{\mathbb F}}
+\newcommand{\E}{{\mathcal E}}
+\newcommand{\proofend}{\hfill$\Box$\smallskip}
+\newcommand{\ko}{{\mathcal O}}
+\newcommand{\wx}{{\widetilde x}}
+\newcommand{\wz}{{\widetilde z}}
+\newcommand{\wa}{{\widetilde a}}
+\newcommand{\bz}{{\boldsymbol z}}
+\newcommand{\bp}{{\boldsymbol p}}
+\newcommand{\wy}{{\widetilde y}}
+\newcommand{\wc}{{\widetilde c}}
+\newcommand{\bi}{{\omega}}
+\newcommand{\bx}{{\boldsymbol x}}
+\newcommand{\Log}{{\operatorname{Log}}}
+\newcommand{\pr}{{\operatorname{pr}}}
+\newcommand{\Graph}{{\operatorname{Graph}}}
+\newcommand{\charc}{{\operatorname{char}}}
+\newcommand{\jet}{{\operatorname{jet}}}
+\newcommand{\Tor}{{\operatorname{Tor}}}
+\newcommand{\sqh}{{\operatorname{sqh}}}
+\newcommand{\const}{{\operatorname{const}}}
+\newcommand{\Arc}{{\operatorname{Arc}}}
+\newcommand{\Sing}{{\operatorname{Sing}}}
+\newcommand{\Span}{{\operatorname{Span}}}
+\newcommand{\Aut}{{\operatorname{Aut}}}
+\newcommand{\Int}{{\operatorname{Int}}}
+\newcommand{\Aff}{{\operatorname{Aff}}}
+\newcommand{\Area}{{\operatorname{Area}}}
+\newcommand{\val}{{\operatorname{Val}}}
+\newcommand{\conv}{{\operatorname{conv}}}
+\newcommand{\rk}{{\operatorname{rk}}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Exp}{\operatorname{Exp}}
+\newcommand{\Nash}{\operatorname{Nash}}
+\newcommand{\Id}{\operatorname{Id}}
+
+\newcommand{\ow}{{\overline w}}
+\newcommand{\ov}{{\overline v}}
+%\newcommand{\Sc}{{\mathcal S}}
+\newcommand{\G}{{\mathcal G}}
+\newcommand{\T}{{\mathcal T}}
+\newcommand{\red}{{\operatorname{red}}}
+\newcommand{\kc}{{\mathcal C}}
+\newcommand{\ki}{{\mathcal I}}
+\newcommand{\kj}{{\mathcal J}}
+\newcommand{\ke}{{\mathcal E}}
+\newcommand{\kz}{{\mathcal Z}}
+
+\newcommand{\bC}{{\mathbb C}}
+
+
+\newcommand{\tet}{{\theta}}
+\newcommand{\Del}{{\Delta}}
+\newcommand{\bet}{{\beta}}
+\newcommand{\mm}{{\mathfrak m}}
+\newcommand{\kap}{{\kappa}}
+\newcommand{\del}{{\delta}}
+\newcommand{\sig}{{\sigma}}
+\newcommand{\alp}{{\alpha}}
+\newcommand{\Sig}{{\Sigma}}
+\newcommand{\Gam}{{\Gamma}}
+\newcommand{\gam}{{\gamma}}
+\newcommand{\Lam}{{\Lambda}}
+\newcommand{\lam}{{\lambda}}
+\newcommand{\om}{{\omega}}
+\newcommand{\Fre}{{Fr\'{e}chet \,}}
+\newcommand{\lcctv}{{locally convex complete topological vector }}
+
+
+
+\newcommand{\bfA}{{\mathbf{A}}}
+\newcommand{\bfB}{{\mathbf{B}}}
+\newcommand{\bfV}{{\mathbf{V}}}
+\newcommand{\bfG}{{\mathbf{G}}}
+\newcommand{\bfL}{{\mathbf{L}}}
+\newcommand{\bfM}{{\mathbf{M}}}
+\newcommand{\bfN}{{\mathbf{N}}}
+\newcommand{\bfU}{{\mathbf{U}}}
+
+
+
+\newcommand{\cA}{{\mathcal{A}}}
+\newcommand{\cB}{{\mathcal{B}}}
+\newcommand{\cC}{{\mathcal{C}}}
+\newcommand{\cD}{{\mathcal{D}}}
+\newcommand{\cE}{{\mathcal{E}}}
+\newcommand{\cF}{{\mathcal{F}}}
+\newcommand{\cG}{{\mathcal{G}}}
+\newcommand{\cH}{{\mathcal{H}}}
+\newcommand{\cN}{{\mathcal{N}}}
+
+
+
+
+\newcommand{\tG}{{\widetilde{G}}}
+\newcommand{\tH}{{\widetilde{H}}}
+\newcommand{\tO}{{\widetilde{O}}}
+
+\newcommand{\et}{{\'{e}tale }}
+\newcommand{\Fou}{{\mathcal{F}}}
+\newcommand{\abs}[1]{\left|{#1}\right|}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\sprod}[2]{\left\langle#1,#2\right\rangle}
+%\newcommand{\cC}{{C_c^{\infty}}}
+\newcommand{\g}{{\mathfrak{g}}}
+
+\newcommand{\fa}{{\mathfrak{a}}}
+\newcommand{\fb}{{\mathfrak{b}}}
+\newcommand{\fc}{{\mathfrak{c}}}
+\newcommand{\fg}{{\mathfrak{g}}}
+\newcommand{\fh}{{\mathfrak{h}}}
+\newcommand{\fn}{{\mathfrak{n}}}
+\newcommand{\fk}{{\mathfrak{k}}}
+\newcommand{\fu}{{\mathfrak{u}}}
+\newcommand{\fv}{{\mathfrak{v}}}
+\newcommand{\fw}{{\mathfrak{w}}}
+\newcommand{\fz}{{\mathfrak{z}}}
+
+\newcommand{\h}{{\mathfrak{h}}}
+\newcommand{\z}{{\mathfrak{z}}}
+\newcommand{\cgot}{{\mathfrak{c}}}
+\newcommand{\Supp}{\mathrm{Supp}}
+\newcommand{\uG}{{\underline{G}}}
+\newcommand{\uH}{{\underline{H}}}
+\newcommand{\uX}{{\underline{X}}}
+\newcommand{\uU}{{\underline{U}}}
+\newcommand{\uV}{{\underline{V}}}
+\newcommand{\uW}{{\underline{W}}}
+\newcommand{\uY}{{\underline{Y}}}
+\newcommand{\uZ}{{\underline{Z}}}
+\newcommand{\gd}{\g^{\sigma}}
+\newcommand{\oF}{{\overline{F}}}
+\newcommand{\cO}{{\mathcal{O}}}
+\newcommand{\GL}{\operatorname{GL}}
+\newcommand{\PGL}{\operatorname{PGL}}
+\newcommand{\SL}{\operatorname{SL}}
+\newcommand{\Sp}{\operatorname{Sp}}
+\newcommand{\oO}{\operatorname{O}}
+\newcommand{\SO}{\operatorname{SO}}
+\newcommand{\gl}{{\mathfrak{gl}}}
+\newcommand{\sll}{{\mathfrak{sl}}}
+\newcommand{\fsp}{{\mathfrak{sp}}}
+\newcommand{\fo}{{\mathfrak{o}}}
+\newcommand{\HC}{\operatorname{HC}}
+\newcommand{\Fr}{\operatorname{Fr}}
+\newcommand{\Mp}{\operatorname{Mp}}
+%\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\Sym}{\operatorname{Sym}}
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\Sc}{{\mathcal S}}
+\newcommand{\Lie}{\operatorname{Lie}}
+\newcommand{\Gr}{\operatorname{Gr}}
+\newcommand{\Coker}{\operatorname{Coker}}
+%\newcommand{\ad}{\operatorname{ad}}
+\newcommand{\Ad}{\operatorname{Ad}}
+\newcommand{\sign}{\operatorname{sign}}
+\newcommand{\on}{\overline{n}}
+\newcommand{\n}{\mathfrak{n}}
+\newcommand{\ou}{\overline{u}}
+\newcommand{\hot}{\widehat{\otimes}}
+\newcommand{\ctp}{\widehat{\otimes}}
+\newcommand{\wO}{\widetilde{\Omega}}
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\gN}{\mathfrak{N}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\Chi}{\mathfrak{X}}
+\newcommand{\fS}{\mathfrak{S}}
+\newcommand{\fJ}{\mathfrak{J}}
+
+\newcommand{\fri}{\mathfrak{i}}
+\newcommand{\fp}{\mathfrak{p}}
+\newcommand{\fl}{\mathfrak{l}}
+\newcommand{\fm}{\mathfrak{m}}
+\newcommand{\fq}{\mathfrak{q}}
+\newcommand{\fr}{\mathfrak{r}}
+\newcommand{\fs}{\mathfrak{s}}
+\newcommand{\ft}{\mathfrak{t}}
+%\newcommand{\fu}{\mathfrak{u}}
+\newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}}
+\newcommand{\tP}{\widetilde{P}}
+\newcommand{\tQ}{\widetilde{Q}}
+%\newcommand{\oD}{\overline{D}}
+%\newcommand{\oE}{\overline{E}}
+%\newcommand{\oPhi}{\overline{\Phi}}
+\newcommand{\oD}{\widetilde{D}}
+\newcommand{\oE}{\widetilde{E}}
+\newcommand{\oPhi}{\widetilde{\Phi}}
+
+
+
+%\newcommand{\tP}{\widetilde{P}}
+
+\newcommand{\hPsi}{\widehat{\Psi}}
+
+\newcommand{\onto}{{\twoheadrightarrow}}
+\newcommand{\otno}{{\twoheadleftarrow}}
+\newcommand{\into}{{\hookrightarrow}}
+\newcommand{\U}{{\mathcal{U}}}
+\newcommand{\ot}{\leftarrow}
+%\newcommand{\<}{{\langle}}
+%\newcommand{\>}{{\rangle}}
+%
+
+
+%\newcommand{\Wh}{\operatorname{Wh}}
+\newcommand{\set}[2]{ \left\{ {#1} \, \left| \, {#2} \right\}\right.}
+\newcommand{\m}{\mathfrak{m}}
+%\newcommand{\u}{\mathfrak{u}}
+
+\renewcommand{\H}{\mathcal{H}}
+\newcommand{\Orb}{\mathcal{O}}
+\newcommand{\WF}{\operatorname{WF}}
+\newcommand{\WO}{\operatorname{WO}}
+\newcommand{\WS}{\operatorname{WS}}
+\newcommand{\QWS}{\operatorname{QWS}}
+\newcommand{\QWO}{\operatorname{QWO}}
+\newcommand{\WFC}{\operatorname{WFC}}
+
+\newcommand{\AC}{\operatorname{AC}}
+\newcommand{\sl}{\mathfrak{sl}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\W}{\mathcal{W}}
+
+\graphicspath{ {images/} }

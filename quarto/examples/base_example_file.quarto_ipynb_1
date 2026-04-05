@@ -1,0 +1,1081 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "2b439806",
+   "metadata": {},
+   "source": [
+    "---\n",
+    "title: \"Ejemplos\" \n",
+    "author: \"Raul Gomez\"\n",
+    "date: today\n",
+    "\n",
+    "format:\n",
+    "   pdf:\n",
+    "     fontsize: 11pt\n",
+    "     pdf-engine: pdflatex\n",
+    "     include-in-header:\n",
+    "       - \"_header.tex\"\n",
+    "       - text: |\n",
+    "           \\fancypagestyle{multivariate_notes}{\n",
+    "             \\fancyhf{}\n",
+    "             \\fancyhead[R]{\\rule[0ex]{0pt}{0ex} \\LARGE \\textbf{Protocolos Criptográficos} }\n",
+    "             \\fancyhead[L]{\\includegraphics[height=1cm]{tecnologico-de-monterrey-blue}}\n",
+    "             % Footer\n",
+    "             \\rfoot{}\n",
+    "             \\cfoot{\\thepage}\n",
+    "             \\lfoot{}\n",
+    "             \\setlength{\\headsep}{10pt}\n",
+    "           }\n",
+    "           \\pagestyle{multivariate_notes}\n",
+    "\n",
+    "jupyter: python3\n",
+    "---\n",
+    "\n",
+    "# Exponenciación Binaria\n",
+    "\n",
+    "En este notebook, mostraremos de manera práctica la diferencia en la velocidad de ejecución entre el algoritmo de exponenciación binaria comparado con el algoritmo de exponenciación ingenua, sin optimizar. Empezaremos por cargar las funciones que necesitamos:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "6c881712",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from cryptocalc import (\n",
+    "    RFC_3526_SAFE_PRIME,\n",
+    "    exp_mod,\n",
+    "    naive_exp_mod\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ad2e941f",
+   "metadata": {},
+   "source": [
+    "Ahora fijaremos un número primo que utilizaremos como módulo y un valor base."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "f6b5c938",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Módulo primo elegido (p): 1552518092300708935130918131258481755631334049434514313202351194902966239949102107258669453876591642442910007680288864229150803718918046342632727613031282983744380820890196288509170691316593175367469551763119843371637221007211169123\n",
+      "\n",
+      "Valor base elegido elegido (g): 2\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "p = RFC_3526_SAFE_PRIME\n",
+    "g = 2\n",
+    "x = (g, p)\n",
+    "print(f\"Módulo primo elegido (p): {p}\\n\")\n",
+    "print(f\"Valor base elegido elegido (g): {g}\\n\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "01a8d5bf",
+   "metadata": {},
+   "source": [
+    "Para comparar los dos algoritmos, mediremos el tiempo que llevar elevar el punto base a la potencia $k = 100$ usando ambos métodos. Con exponenciación binaria:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "3ac15dc9",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Elapsed time: 0.000031 seconds\n"
+     ]
+    }
+   ],
+   "source": [
+    "import time\n",
+    "\n",
+    "start = time.perf_counter()\n",
+    "exp_mod(x, 100)\n",
+    "end = time.perf_counter()\n",
+    "\n",
+    "print(f\"Elapsed time: {end - start:.6f} seconds\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "673f556c",
+   "metadata": {},
+   "source": [
+    "Usando exponenciación ingenua:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "2a40b0a9",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Elapsed time: 0.000038 seconds\n"
+     ]
+    }
+   ],
+   "source": [
+    "start = time.perf_counter()\n",
+    "naive_exp_mod(x, 100)\n",
+    "end = time.perf_counter()\n",
+    "\n",
+    "print(f\"Elapsed time: {end - start:.6f} seconds\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "142713a3",
+   "metadata": {},
+   "source": [
+    "Como podemos observar, no hay una diferencia muy significativa entre ambos algoritmos por el momento. Elevaremos ahora el punto base a la potencia $k = 100000$. Con exponenciación binaria:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "3e8e1032",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Elapsed time: 0.000047 seconds\n"
+     ]
+    }
+   ],
+   "source": [
+    "start = time.perf_counter()\n",
+    "exp_mod(x, 100000)\n",
+    "end = time.perf_counter()\n",
+    "\n",
+    "print(f\"Elapsed time: {end - start:.6f} seconds\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "07e9e9b3",
+   "metadata": {},
+   "source": [
+    "Usando exponenciación ingenua:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "ade5a97e",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Elapsed time: 0.010510 seconds\n"
+     ]
+    }
+   ],
+   "source": [
+    "start = time.perf_counter()\n",
+    "naive_exp_mod(x, 100000)\n",
+    "end = time.perf_counter()\n",
+    "\n",
+    "print(f\"Elapsed time: {end - start:.6f} seconds\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6df34a66",
+   "metadata": {},
+   "source": [
+    "Podemos notar que en este caso ya existe una diferencia significativa entre ambos algoritmos. Repetiremos ahora este proceso tomando como potencia $k = 10000000$. Con exponenciación binaria:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "fbdd3a91",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Elapsed time: 0.000104 seconds\n"
+     ]
+    }
+   ],
+   "source": [
+    "start = time.perf_counter()\n",
+    "exp_mod(x, 10000000)\n",
+    "end = time.perf_counter()\n",
+    "\n",
+    "print(f\"Elapsed time: {end - start:.6f} seconds\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9f623f58",
+   "metadata": {},
+   "source": [
+    "Usando exponenciación ingenua:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "d95822f9",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Elapsed time: 1.077710 seconds\n"
+     ]
+    }
+   ],
+   "source": [
+    "start = time.perf_counter()\n",
+    "naive_exp_mod(x, 10000000)\n",
+    "end = time.perf_counter()\n",
+    "\n",
+    "print(f\"Elapsed time: {end - start:.6f} seconds\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9150d064",
+   "metadata": {},
+   "source": [
+    "Aquí podemos notar como la diferencia entre ambos algoritmos se va haciendo más palpable. Finalmente, tomaremos como potencia $k = 1000000000$. Con exponenciación binaria:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "dd71fa9f",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Elapsed time: 0.000089 seconds\n"
+     ]
+    }
+   ],
+   "source": [
+    "start = time.perf_counter()\n",
+    "exp_mod(x, 1000000000)\n",
+    "end = time.perf_counter()\n",
+    "\n",
+    "print(f\"Elapsed time: {end - start:.6f} seconds\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7e9fb13a",
+   "metadata": {},
+   "source": [
+    "Usando exponenciación ingenua:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "9a579ad9",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Elapsed time: 109.516067 seconds\n"
+     ]
+    }
+   ],
+   "source": [
+    "start = time.perf_counter()\n",
+    "naive_exp_mod(x, 1000000000)\n",
+    "end = time.perf_counter()\n",
+    "\n",
+    "print(f\"Elapsed time: {end - start:.6f} seconds\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6f900ebe",
+   "metadata": {},
+   "source": [
+    "Aquí ya podemos notar un efecto mucho más significativo. Queda claro que si tomamos potencias mucho mayores el cálculo por exponenciación ingenua se vuelve rápidamente imposible de realizar en un tiempo razonable.\n",
+    "\n",
+    "# Sistema RSA para firmas digitales\n",
+    "\n",
+    "En este notebook, mostraremos el proceso para generar las claves pública y privada, así como el proceso para generar una firma digital y su verificación correspondiente usando el sistema RSA. Empezaremos por cargar las funciones que necesitamos:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "20e77d14",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from cryptocalc import (\n",
+    "    rsa_key_generation,\n",
+    "    rsa_signature_generation,\n",
+    "    is_valid_rsa_signature,\n",
+    "    sha256_of_sentence,\n",
+    "   )"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "38746440",
+   "metadata": {},
+   "source": [
+    "## Protocolo RSA para la generación de claves\n",
+    "\n",
+    "Una vez que ya hemos cargado las librerías necesarias, empezamos por generar nuestras claves *pública* y *privada:*"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "09b1c06e",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Exponente público (e): 65537\n",
+      "\n",
+      "Exponente privado (d): 388295760787525036999011484783087264494748750242847265076878887257792260514448982149012501603311864664728248332557847108647281224482246396077083922468281381126427141479647941122868588356641586847640245223348967282000487121525082772293052768581272637913218517610340764640032829385247844882957203903484024697188360911568155256916659737381647954305718282903940084884529820019554582257429887511805326407080041528565568284161032743172803047391193063623131156341005949217588340726776436385347066574053229799937697373592795661324071788683327427799317899651394140084209338503385609245291742351265892787952798725032202520438206060782998799074990868765940225471963203891926416503937379833172820152021321133038403315991957898417687004061190300622600276331321675414477087950865561755279926691409922753744726562438834280791566957318677591960463743478813307008230691041173999338415879385809815349843150575423708011341588417656353565744081439708872205644438269441241375362400906636506580507494741365807872178967512233362027759693872980417242717704621704321340690612502489082574000484097861078155470818161735592943487657209852944817912301510017957388101092339032169188176506094954298120812873790374336047683439196917327018692737482332667618966582913\n",
+      "\n",
+      "Módulo para las claves (n): 548052877796653852859048859178368618292859579279079129311985261219691412946297739605449407050508252202793168887878095879211269347423017725749011457945938381644146524479393688053096691472211997442202716843680599331519951855003754865026377776463094455902453039618997322856886945478883294426256461400784625731260819009356323973737366295711693450376539510836592969290750776702378667271233444702284704342618497225197632042708022373943445250508832507282948476151024204636208883471038858384909239163175468339295692132172184637137287980852825138063099459209041366241656309467326743331438522569614558948249360800345346124135010619543650863535845514159721371869942346890485048244223301421275410799500517127425462059222543941804245953502292688768208927310194948748625790590434331699693740329139651030702821070336879669931622689880613444487242762162309826056557008889377654403361706455681458328435037082938014485776719406156363043733181114343458638054198328482448579538339092383778834080249850800275239735119810641574779602737570114342726456840475226156505817701696394505041453446481050109059256945853042024440136795852704783313423414735594528371581490110299972126029840270281628560352412563393665184829940653061637680840116482285412997007462393\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "(public_key, private_key) = rsa_key_generation(2048)\n",
+    "d = private_key[0]\n",
+    "e = public_key[0]\n",
+    "n = public_key[1]\n",
+    "\n",
+    "print(f\"Exponente público (e): {e}\\n\")\n",
+    "print(f\"Exponente privado (d): {d}\\n\")\n",
+    "print(f\"Módulo para las claves (n): {n}\\n\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "fba17686",
+   "metadata": {},
+   "source": [
+    "Notemos que para la generación de estas claves utilizamos números primos generados de manera aleatoria de alrededor de 2048 bits de longitud. Se sigue que el módulo generado $n$ tiene alrededor de 4096 bits de longitud. Es muy importante que el valor del exponente privado $d$ no se divulge. En cambio, el exponente público $e$ y el módulo $n$ forman parte de la clave pública y son conocidos por todos los agentes involucrados, incluída Eva.\n",
+    "\n",
+    "## Protocolo RSA para la firma de mensajes\n",
+    "\n",
+    "Para ilustrar el protocolo para la generación de firmas digitales, supongamos que Alicia desea firmar el mensaje 'Hello World!'. Empezaremos por generar el hash correspondiente:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "b3112864",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Mensaje llano (m): Hello World!\n",
+      "\n",
+      "Hash del mensaje llano (h): 57676413081093003148005107550719583540116985236696423860923466490497932824681\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "m = 'Hello World!'\n",
+    "h = sha256_of_sentence(m)\n",
+    "\n",
+    "print(f\"Mensaje llano (m): {m}\\n\")\n",
+    "print(f\"Hash del mensaje llano (h): {h}\\n\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "15d61296",
+   "metadata": {},
+   "source": [
+    "Con esta información, podemos generar ahora la firma correspondiente y agregarla al mensaje llano para generar el *mensaje firmado:*"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "1ad70b88",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "El mensaje firmado es: ('Hello World!', 401640971359655275098729043939084183326020020732919847765651940077018172729056132369376115683652246486529893821708872069127680834720534776325315299922056022442273460086103785204016299817423832713422922004369125310802910454789953391804191802007922717277369074792258299257298122052131966051016797104899088243835446214097716673691874627628692127913211323406954584476733825456737427081063636503273262987009126056664386795903077942384887978481004924412165819638502837242418709659255513365775024541935048293720968518640004334073842034214977090663991962068027911145437644406952799419120415119697928394860875621115259292060160040569927550839702108499306744571675961027650906443881793880337726528438316980730290817681928059299608648246086361252022348655196867125946976974974209712688141855092443280661226006884858806769345353883439080917968192352958032342454933033940648498576203031562608861027150805544853365162975362344471280516189715376690463307116903411926609727053888678329163175302520902663848619169534277293298552588859685422370423139687424619316566118634688860910726114901358791457481986810010272913053618311249420647142862667294752099025605721071460438056158765566510507581041305624353544842442197261471382788474486876140485784304141)\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "s = rsa_signature_generation(private_key, h)\n",
+    "signed_message = (m, s)\n",
+    "\n",
+    "print(f\"El mensaje firmado es: {signed_message}\\n\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "59a67a5a",
+   "metadata": {},
+   "source": [
+    "## Protocolo RSA para la verificación de firmas\n",
+    "\n",
+    "Para verificar la firma, Beto aplica el protocolo RSA utilizando la clave pública de Alicia, el hash del mensaje y la firma correspondiente:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "79d0f3e0",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "La firma es válida\n"
+     ]
+    }
+   ],
+   "source": [
+    "h = sha256_of_sentence(signed_message[0])\n",
+    "s = signed_message[1]\n",
+    "\n",
+    "if is_valid_rsa_signature(public_key,h,s):\n",
+    "    verificacion_firma = \"La firma es válida\"\n",
+    "else:\n",
+    "    verificacion_firma = \"La firma es inválida\"\n",
+    "\n",
+    "print(verificacion_firma)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c3c18859",
+   "metadata": {},
+   "source": [
+    "# Protocolo Diffie-Hellman para la generación de una clave compartida\n",
+    "\n",
+    "En este notebook, mostraremos el proceso de generar una clave compartida utilizando el protocolo Diffie-Hellman. Empezaremos por cargar las funciones que necesitamos:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "bcdff98b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from cryptocalc import (\n",
+    "  RFC_3526_SAFE_PRIME,\n",
+    "  RFC_3526_SOPHIE_PRIME,\n",
+    "  generate_private_key,\n",
+    "  diffie_hellman_public_key_generator,\n",
+    "  diffie_hellman_shared_key_generator\n",
+    "  )"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d867491f",
+   "metadata": {},
+   "source": [
+    "Para este ejemplo, utilizaremos uno de los primos seguros listados en la especificación [RFC 3526](https://www.ietf.org/rfc/rfc3526.txt) y generaremos las claves secretas de Alicia y Beto de manera aleatoria:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "1d3c2959",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Primo Seguro (p): 1552518092300708935130918131258481755631334049434514313202351194902966239949102107258669453876591642442910007680288864229150803718918046342632727613031282983744380820890196288509170691316593175367469551763119843371637221007211169123\n",
+      "\n",
+      "Primo de Sophie Germain (q): 776259046150354467565459065629240877815667024717257156601175597451483119974551053629334726938295821221455003840144432114575401859459023171316363806515641491872190410445098144254585345658296587683734775881559921685818610503605584561\n",
+      "\n",
+      "Generador (g): 2\n",
+      "\n",
+      "Clave privada de Alicia (a): 636978998231992943122782524866848359573009213174083353728173390394011028752195367658125844315062786770211213094048694071419286568303107176767935657225541335980464193442673502177983970484525605037335337299754440246457876952827855169\n",
+      "\n",
+      "Clave privada de Beto (b): 661365517605844874951991663617670557057018658913863855203221446888905202285203033635088683697397672582752020430270424978334114128387678736839887172060750641139082452745729485233025847858526038869094658900508581291084524611951167967\n"
+     ]
+    }
+   ],
+   "source": [
+    "p = RFC_3526_SAFE_PRIME\n",
+    "q = RFC_3526_SOPHIE_PRIME\n",
+    "g = 2\n",
+    "a = generate_private_key(q)\n",
+    "b = generate_private_key(q)\n",
+    "\n",
+    "print(f\"Primo Seguro (p): {p}\\n\")\n",
+    "print(f\"Primo de Sophie Germain (q): {q}\\n\")\n",
+    "print(f\"Generador (g): {g}\\n\")\n",
+    "print(f\"Clave privada de Alicia (a): {a}\\n\")\n",
+    "print(f\"Clave privada de Beto (b): {b}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "72f7c186",
+   "metadata": {},
+   "source": [
+    "Generamos ahora las claves públicas de Alicia y Beto:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "031d0f09",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Clave pública de Alicia (A): 1167048827223658883612946743195149141248790267079467624023540048998692355705601475892396645779149039613057672327224441169414184901852795676651934789302115266846228782833281175045588753000943419469417155901917642717398179135998051563\n",
+      "\n",
+      "Clave pública de Beto (B): 533371104502676840984111483079455158317082723007592131489973809735118482394389398723246147563025952798695018629869250848712383605951996891867732759845676455045948407989264039321677860165124555504415822104284972941167692819046625400\n"
+     ]
+    }
+   ],
+   "source": [
+    "A = diffie_hellman_public_key_generator(p, g, a)\n",
+    "B = diffie_hellman_public_key_generator(p, g, b)\n",
+    "\n",
+    "print(f\"Clave pública de Alicia (A): {A}\\n\")\n",
+    "print(f\"Clave pública de Beto (B): {B}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "861d6c0a",
+   "metadata": {},
+   "source": [
+    "Finalmente, generamos las claves compartidas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "2c02f2a1",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Clave compartida generada por Alicia (s_a): 1234664562325065424747074693948924406016075116372511019071039315560090111920018965543895486902473492475045103462457447833819055262244930848110815664078059524145981996282364041856498539003965750352616065491350622035669026955882576316\n",
+      "\n",
+      "Clave compartida generada por Beto (s_b): 1234664562325065424747074693948924406016075116372511019071039315560090111920018965543895486902473492475045103462457447833819055262244930848110815664078059524145981996282364041856498539003965750352616065491350622035669026955882576316\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "s_a = diffie_hellman_shared_key_generator(p, B, a)\n",
+    "s_b = diffie_hellman_shared_key_generator(p, A, b)\n",
+    "\n",
+    "print(f\"Clave compartida generada por Alicia (s_a): {s_a}\\n\")\n",
+    "print(f\"Clave compartida generada por Beto (s_b): {s_b}\\n\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b1131f0e",
+   "metadata": {},
+   "source": [
+    "Como podemos observar, ambas claves son iguales, lo cual ilustra la correción del protocolo.\n",
+    "\n",
+    "# Curvas Elípticas\n",
+    "\n",
+    "En este notebook, mostraremos un ejemplo de una curva elíptica y las operaciones que se pueden realizar sobre sus puntos. Empezaremos por cargar las funciones que necesitamos:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "9e1ee43c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from cryptocalc import EllipticCurve"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "12533932",
+   "metadata": {},
+   "source": [
+    "Usaremos la curva elíptica:\n",
+    "\n",
+    "$$\n",
+    "y^2 = x^3 + 6x + 23\n",
+    "$$\n",
+    "\n",
+    "sobre el campo finito $\\mathbb{F}_{103}$. Su discriminante y $j$-invariante son:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "b4f76cea",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Discriminante modulo p: 7\n",
+      "j-invariante modulo p: 87\n"
+     ]
+    }
+   ],
+   "source": [
+    "c1 = 6\n",
+    "c0 = 23\n",
+    "p = 103\n",
+    "\n",
+    "curve = EllipticCurve(p, c1, c0)\n",
+    "\n",
+    "print(f\"Discriminante modulo p: {curve.get_discriminant()}\")\n",
+    "print(f\"j-invariante modulo p: {curve.j_invariant()}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "884ae925",
+   "metadata": {},
+   "source": [
+    "Como nuestro campo base es pequeño, podemos calcular todos sus puntos de manera explícita:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "f76d43db",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Lista de puntos sobre la curva:\n",
+      "\n",
+      "1: infty\n",
+      "2: (0, 34)\n",
+      "3: (0, 69)\n",
+      "4: (1, 37)\n",
+      "5: (1, 66)\n",
+      "6: (3, 45)\n",
+      "7: (3, 58)\n",
+      "8: (4, 27)\n",
+      "9: (4, 76)\n",
+      "10: (8, 45)\n",
+      "11: (8, 58)\n",
+      "12: (11, 9)\n",
+      "13: (11, 94)\n",
+      "14: (12, 22)\n",
+      "15: (12, 81)\n",
+      "16: (13, 49)\n",
+      "17: (13, 54)\n",
+      "18: (18, 35)\n",
+      "19: (18, 68)\n",
+      "20: (22, 20)\n",
+      "21: (22, 83)\n",
+      "22: (27, 35)\n",
+      "23: (27, 68)\n",
+      "24: (29, 22)\n",
+      "25: (29, 81)\n",
+      "26: (32, 34)\n",
+      "27: (32, 69)\n",
+      "28: (34, 44)\n",
+      "29: (34, 59)\n",
+      "30: (36, 37)\n",
+      "31: (36, 66)\n",
+      "32: (37, 4)\n",
+      "33: (37, 99)\n",
+      "34: (38, 11)\n",
+      "35: (38, 92)\n",
+      "36: (42, 10)\n",
+      "37: (42, 93)\n",
+      "38: (43, 13)\n",
+      "39: (43, 90)\n",
+      "40: (47, 43)\n",
+      "41: (47, 60)\n",
+      "42: (51, 25)\n",
+      "43: (51, 78)\n",
+      "44: (54, 18)\n",
+      "45: (54, 85)\n",
+      "46: (57, 40)\n",
+      "47: (57, 63)\n",
+      "48: (58, 35)\n",
+      "49: (58, 68)\n",
+      "50: (60, 17)\n",
+      "51: (60, 86)\n",
+      "52: (61, 7)\n",
+      "53: (61, 96)\n",
+      "54: (62, 22)\n",
+      "55: (62, 81)\n",
+      "56: (63, 40)\n",
+      "57: (63, 63)\n",
+      "58: (64, 2)\n",
+      "59: (64, 101)\n",
+      "60: (65, 50)\n",
+      "61: (65, 53)\n",
+      "62: (66, 37)\n",
+      "63: (66, 66)\n",
+      "64: (67, 4)\n",
+      "65: (67, 99)\n",
+      "66: (70, 12)\n",
+      "67: (70, 91)\n",
+      "68: (71, 34)\n",
+      "69: (71, 69)\n",
+      "70: (72, 15)\n",
+      "71: (72, 88)\n",
+      "72: (77, 25)\n",
+      "73: (77, 78)\n",
+      "74: (78, 25)\n",
+      "75: (78, 78)\n",
+      "76: (79, 28)\n",
+      "77: (79, 75)\n",
+      "78: (81, 26)\n",
+      "79: (81, 77)\n",
+      "80: (82, 3)\n",
+      "81: (82, 100)\n",
+      "82: (86, 40)\n",
+      "83: (86, 63)\n",
+      "84: (88, 36)\n",
+      "85: (88, 67)\n",
+      "86: (89, 39)\n",
+      "87: (89, 64)\n",
+      "88: (90, 23)\n",
+      "89: (90, 80)\n",
+      "90: (92, 45)\n",
+      "91: (92, 58)\n",
+      "92: (94, 8)\n",
+      "93: (94, 95)\n",
+      "94: (95, 9)\n",
+      "95: (95, 94)\n",
+      "96: (96, 16)\n",
+      "97: (96, 87)\n",
+      "98: (99, 48)\n",
+      "99: (99, 55)\n",
+      "100: (100, 9)\n",
+      "101: (100, 94)\n",
+      "102: (102, 4)\n",
+      "103: (102, 99)\n"
+     ]
+    }
+   ],
+   "source": [
+    "E_p = curve.points()\n",
+    "print(\"Lista de puntos sobre la curva:\\n\")\n",
+    "for i, point in enumerate(E_p, start=1):\n",
+    "    print(f\"{i}: {point}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "745b4e39",
+   "metadata": {},
+   "source": [
+    "Consideramos ahora dos puntos sobre la curva: $$\n",
+    "P = (95, 9) \\qquad \\text{y} \\qquad Q = (79,28)\n",
+    "$$Y realizamos los siguientes cálculos:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "f7844879",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "P + Q = (66, 66)\n",
+      "2P = (34, 44)\n",
+      "-P = (95, 94)\n"
+     ]
+    }
+   ],
+   "source": [
+    "P = (95, 9)\n",
+    "Q = (79, 28)\n",
+    "R = curve.addition(P,Q)\n",
+    "S = curve.double(P)\n",
+    "T = curve.inverse(P)\n",
+    "\n",
+    "print(f\"P + Q = {R}\")\n",
+    "print(f\"2P = {S}\")\n",
+    "print(f\"-P = {T}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c21ce3ef",
+   "metadata": {},
+   "source": [
+    "Como aplicación a estas operaciones en curvas elípticas, consideraremos el problema de guardar los hash de ciertos passwords. Para este ejemplo, dado un password $m$ calcularemos $mP$ como su hash:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "d21aa213",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "Contrasenas originales:\n",
+      "[20, 27, 72]\n",
+      "\n",
+      "Hashes almacenados:\n",
+      "[(89, 64), (67, 99), (32, 34)]\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "list_of_passwords = [20, 27, 72]\n",
+    "list_of_hashed_passwords = [curve.multiplication(m, P) for m in list_of_passwords]\n",
+    "\n",
+    "print(\"\")\n",
+    "print(\"Contrasenas originales:\")\n",
+    "print(list_of_passwords)\n",
+    "print(\"\\nHashes almacenados:\")\n",
+    "print(list_of_hashed_passwords)\n",
+    "print(\"\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "41bce483",
+   "metadata": {},
+   "source": [
+    "# Protocolo Diffie-Hellman de Curvas Elípticas (ECDH) para la generación de una clave compartida\n",
+    "\n",
+    "En este notebook, mostraremos el proceso de generar una clave compartida utilizando el protocolo ECDH. Empezaremos por cargar las funciones que necesitamos:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "id": "d9cd54c5",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from cryptocalc import (\n",
+    "    EllipticCurve,\n",
+    "    SECP256K1,\n",
+    "    generate_elliptic_private_key,\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "df7aeeeb",
+   "metadata": {},
+   "source": [
+    "Para este ejemplo, utilizaremos la curva `secp256k1` la cual se encuentra especificada en el documento [SEC 2: Recommended Elliptic Curve Domain Parameters](https://www.secg.org/sec2-v2.pdf) y generaremos las claves secretas de Alicia y Beto de manera aleatoria:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "id": "72fb610e",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Primo Base (p): 115792089237316195423570985008687907853269984665640564039457584007908834671663\n",
+      "\n",
+      "Coeficiente del término lineal: 0\n",
+      "\n",
+      "Coeficiente del término constante: 7\n",
+      "\n",
+      "Generador (G): (55066263022277343669578718895168534326250603453777594175500187360389116729240, 32670510020758816978083085130507043184471273380659243275938904335757337482424)\n",
+      "\n",
+      "Orden del Generador (n): 115792089237316195423570985008687907852837564279074904382605163141518161494337\n",
+      "\n",
+      "Clave privada de Alicia (a): 11412362292333573509766425743200603104620249080105178516015638385636072582676\n",
+      "\n",
+      "Clave privada de Beto (b): 4557343802234857857689462518440899950102602524994888391932499450395242867617\n"
+     ]
+    }
+   ],
+   "source": [
+    "p = SECP256K1[\"p\"]\n",
+    "c1 = SECP256K1[\"a\"]\n",
+    "c0 = SECP256K1[\"b\"]\n",
+    "G = SECP256K1[\"G\"]\n",
+    "n = SECP256K1[\"n\"]\n",
+    "h = SECP256K1[\"h\"]\n",
+    "curve = EllipticCurve(p,c1,c0)\n",
+    "a = generate_elliptic_private_key(n)\n",
+    "b = generate_elliptic_private_key(n)\n",
+    "\n",
+    "print(f\"Primo Base (p): {p}\\n\")\n",
+    "print(f\"Coeficiente del término lineal: {c1}\\n\")\n",
+    "print(f\"Coeficiente del término constante: {c0}\\n\")\n",
+    "print(f\"Generador (G): {G}\\n\")\n",
+    "print(f\"Orden del Generador (n): {n}\\n\")\n",
+    "print(f\"Clave privada de Alicia (a): {a}\\n\")\n",
+    "print(f\"Clave privada de Beto (b): {b}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "0d0ccfc4",
+   "metadata": {},
+   "source": [
+    "Generamos ahora las claves públicas de Alicia y Beto:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "id": "1bc1f870",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Clave pública de Alicia (A): (14990947465436895664851544875370750485716824640649141904644374949671524995776, 96086630406057367085755027810206890420192810732687866759675927422461822774829)\n",
+      "\n",
+      "Clave pública de Beto (B): (51106825042931655925114844604445254714434786236874531849038071965224271302550, 87326376352370082296278357268147395434950418482018779585768232740482269565487)\n"
+     ]
+    }
+   ],
+   "source": [
+    "A = curve.multiplication(a,G)\n",
+    "B = curve.multiplication(b,G)\n",
+    "\n",
+    "print(f\"Clave pública de Alicia (A): {A}\\n\")\n",
+    "print(f\"Clave pública de Beto (B): {B}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "95dc714f",
+   "metadata": {},
+   "source": [
+    "Finalmente, generamos las claves compartidas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "id": "f49fe5d0",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Clave compartida generada por Alicia: (3664219430569436609331136726352843371452880743197612345276323503724064622159, 18048700558695878378302270184869914616683473888027040336817836905927825879916)\n",
+      "\n",
+      "Clave compartida generada por Beto: (3664219430569436609331136726352843371452880743197612345276323503724064622159, 18048700558695878378302270184869914616683473888027040336817836905927825879916)\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "S_a = curve.multiplication(a,B)\n",
+    "S_b = curve.multiplication(b,A)\n",
+    "\n",
+    "print(f\"Clave compartida generada por Alicia: {S_a}\\n\")\n",
+    "print(f\"Clave compartida generada por Beto: {S_b}\\n\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b00ebdf2",
+   "metadata": {},
+   "source": [
+    "Como podemos observar, ambas claves son iguales, lo cual ilustra la correción del protocolo.\n"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3",
+   "path": "/usr/share/jupyter/kernels/python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.14.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

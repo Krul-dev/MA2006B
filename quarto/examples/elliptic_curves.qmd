@@ -15,11 +15,11 @@ $$
 sobre el campo finito $\mathbb{F}_{103}$. Su discriminante y $j$-invariante son:
 
 ```{python}
-a = 6
-b = 23
+c1 = 6
+c0 = 23
 p = 103
 
-curve = EllipticCurve(p, a, b)
+curve = EllipticCurve(p, c1, c0)
 
 print(f"Discriminante modulo p: {curve.get_discriminant()}")
 print(f"j-invariante modulo p: {curve.j_invariant()}")

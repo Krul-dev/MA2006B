@@ -1,6 +1,6 @@
-# Protocolo de Firmas Digitales usando Curvas Elípticas (ECDSA)
+# Sistema de Firmas Digitales usando Curvas Elípticas (ECDSA)
 
-En este notebook, mostraremos el proceso para generar las llaves pública y privada, así como el proceso para generar una firma digital y su verificación correspondiente usando el protocolo ECDSA. Empezaremos por cargar las funciones que necesitamos:
+En este notebook, mostraremos el proceso para generar las claves pública y privada, así como el proceso para generar una firma digital y su verificación correspondiente usando el sistema ECDSA. Empezaremos por cargar las funciones que necesitamos:
 
 ```{python}
 from cryptocalc import (
@@ -31,20 +31,20 @@ print(f"Generador (G): {G}\n")
 print(f"Orden del Generador (n): {n}\n")
 ```
 
-Generamos ahora la llave privada de Alicia de manera aleatoria.
+Generamos ahora la clave privada de Alicia de manera aleatoria.
 
 ```{python}
 d = generate_elliptic_private_key(n)
 
-print(f"Llave privada de Alicia (d): {d}\n")
+print(f"Clave privada de Alicia (d): {d}\n")
 ```
 
-La llave pública de Alicia estará dada por $Q =d G \in E(\mathbb{F}_{p})$
+La clave pública de Alicia estará dada por $Q =d G \in E(\mathbb{F}_{p})$
 
 ```{python}
 Q = E.multiplication(d,G)
 
-print(f"Llave pública de Alicia (Q): {Q}\n")
+print(f"Clave pública de Alicia (Q): {Q}\n")
 ```
 
 Para ilustrar el algoritmo de generación de firmas digitales, supongamos que Alicia desea firmar el siguiente mensaje llano $m$:

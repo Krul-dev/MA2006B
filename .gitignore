@@ -1,10 +1,14 @@
 # Ignore Python compiled files
+# Ignore Python compiled files
 __pycache__/
 *.pyc
 *.pyo
 
-# Ignore virtual environment
+# Ignore virtual environments
 venv/
+.env/
+
+# Ignore environment files
 .env
 
 # Ignore build and distribution files
@@ -12,35 +16,32 @@ build/
 dist/
 *.egg-info/
 
+# Ignore Private experimental files
+private_experiments
+
 # Ignore IDE/editor files
 .vscode/
 .idea/
-*.swp  # Vim swap files
+.Rproj.user/
+
+# Vim swap files
+*.swp
 
 # JupyterLab / Jupyter Desktop UI state
 .jupyter/
+.ipynb_checkpoints/
 .jupyter_ystore.db
 
 # R local files
-.Rprofile
 .Rhistory
 .RData
 .Ruserdata
-
-# Test directory 
-tests/
-
-# Logs / notebooks / outputs
-*.log
-.quarto/
-.ipynb_checkpoints/
-**/.ipynb_checkpoints/
-.jupyter_ystore.db
-**/.jupyter_ystore.db
-output/
-**/*.quarto_ipynb
-.Rproj.user
-
 .Renviron
 
-/.quarto/
+# Quarto
+.quarto/
+*.quarto_ipynb
+
+# Logs / outputs
+*.log
+output/
